@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Diagrama de Decisión - Sistema RAG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.2.0/mermaid.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.2.0/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true });</script>
+    <style>
+        /* Estilos generales para cada tipo de nodo */
+        .node rect {
+            stroke-width: 3px;
+            filter: drop-shadow(2px 2px 3px #666);
+        }
+        /* Colores y estilos específicos por tipo de nodo */
+        .node.id1 rect { fill: #f0f0f0; stroke: #333; } /* Inicio */
+        .node.id2 rect, .node.id3 rect, .node.id5 rect { fill: #e0ffff; stroke: #4d97d9; } /* Procesos */
+        .node.id4 rect, .node.id6 rect { fill: #ffffff; stroke: #666; } /* Decisiones */
+        .node.id7 rect, .node.id9 rect { fill: #90ee90; stroke: #008000; } /* Final y outputs */
+    </style>
+</head>
+<body>
+    <div class="mermaid">
+        graph TD
+            A[Inicio: Usuario introduce query en español] --> B[Preprocesamiento];
+            B --> C[Traducción usando Deep LLM];
+            C --> D{Es la traducción correcta?};
+            D -->|Sí| E[Consulta a base de datos];
+            D -->|No| F[Revisar y corregir traducción];
+            E --> G{Respuesta obtenida satisfactoria?};
+            G -->|Sí| K[Mostrar respuesta en Streamlit];
+            G -->|No| I[Refinamiento de la respuesta];
+            I --> J[Postprocesamiento y revisión final];
+            J --> K[Traducción usando Deep LLM];
+            K --> L[Mostrar respuesta en Streamlit];
+    </div>
+</body>
+</html>
+
