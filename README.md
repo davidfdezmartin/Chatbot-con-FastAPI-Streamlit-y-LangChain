@@ -53,8 +53,7 @@ Este repositorio contiene un chatbot desarrollado utilizando FastAPI, Streamlit 
      ```
      GROQ_API_KEY=TU_CLAVE_API_GROQ
      HUGGING_FACE_API_TOKEN=TU_TOKEN_ACCESO_HUGGING_FACE
-     WIKIPEDIA_API_KEY=TU_CLAVE_API_WIKIPEDIA
-     ARXIV_API_KEY=TU_CLAVE_API_ARXIV
+     
      ```
    - Guarda y cierra el archivo `.env`.
 
