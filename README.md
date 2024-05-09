@@ -1,11 +1,10 @@
 # Chatbot con FastAPI, Streamlit y LangChain
 
-Este repositorio contiene un chatbot desarrollado utilizando FastAPI, Streamlit y LangChain, junto con el modelo de lenguaje Groq y el almacenamiento vectorial. El chatbot puede responder preguntas basadas en documentos proporcionados en formatos PDF, CSV y JSON, y utiliza herramientas adicionales como Wikipedia y Arxiv para proporcionar respuestas más completas.
+Este repositorio contiene un chatbot desarrollado utilizando FastAPI, Streamlit y LangChain, junto con el modelo de lenguaje GPT-J y el almacenamiento vectorial. El chatbot puede responder preguntas basadas en documentos proporcionados en formatos PDF, CSV y JSON, y utiliza herramientas adicionales como Wikipedia y Arxiv para proporcionar respuestas más completas.
 
 ## Requisitos previos
 - Python 3.7 o superior
 - Cuenta de Groq
-- Cuenta de Hugging Face (para el modelo Llama)
 
 ## Pasos de configuración
 
@@ -42,22 +41,16 @@ Este repositorio contiene un chatbot desarrollado utilizando FastAPI, Streamlit 
      pip install -r requirements.txt
      ```
 
-4. **Obtener las claves de API necesarias:**
-   - Obtén las claves de API necesarias para Groq, Hugging Face, Wikipedia y Arxiv.
-   - Sigue las instrucciones proporcionadas en sus respectivas plataformas para obtener las claves de API.
-
-5. **Configurar las variables de entorno:**
+4. **Configurar las variables de entorno:**
    - En el directorio raíz del repositorio, crea un nuevo archivo llamado `.env`.
    - Abre el archivo `.env` en un editor de texto.
-   - Agrega las siguientes líneas al archivo, reemplazando los valores con las claves de API correspondientes:
+   - Agrega la siguiente línea al archivo, reemplazando `TU_CLAVE_API_GROQ` con tu clave de API de Groq:
      ```
      GROQ_API_KEY=TU_CLAVE_API_GROQ
-     HUGGING_FACE_API_TOKEN=TU_TOKEN_ACCESO_HUGGING_FACE
-     
      ```
    - Guarda y cierra el archivo `.env`.
 
-## Pasos de ejecución
+## Pasos para abrir y utilizar la API
 
 1. **Ejecutar la aplicación FastAPI:**
    - En una terminal o línea de comandos, navega hasta el directorio del repositorio.
@@ -82,6 +75,7 @@ Este repositorio contiene un chatbot desarrollado utilizando FastAPI, Streamlit 
    - En la interfaz de usuario de Streamlit, ingresa tu pregunta en el campo de texto provisto.
    - Haz clic en el botón "Obtener respuesta" para enviar la pregunta al chatbot.
    - El chatbot procesará la pregunta y mostrará la respuesta generada junto con el contexto relevante.
+   - Puedes expandir la sección "Detalles adicionales" para ver el contexto y los pasos intermedios utilizados por el chatbot para generar la respuesta.
 
 ¡Eso es todo! Ahora puedes utilizar el chatbot y explorar sus capacidades de respuesta basadas en los documentos proporcionados y las herramientas adicionales integradas.
 
