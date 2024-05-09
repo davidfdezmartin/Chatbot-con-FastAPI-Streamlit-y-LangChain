@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, Request
-from langchain_groq import GroqModel
+from langchain_groq import ChatGroq
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -25,7 +25,7 @@ os.environ['GROQ_API_KEY'] = os.getenv("GROQ_API_KEY")
 groq_api_key = os.getenv('GROQ_API_KEY')
 
 model_name = "ydshieh/tiny-random-gptj-for-question-answering"
-model = GroqModel(model_name=model_name, groq_api_key=groq_api_key)
+model = ChatGroq(model_name=model_name, groq_api_key=groq_api_key)
 
 prompt = ChatPromptTemplate.from_template(
     """

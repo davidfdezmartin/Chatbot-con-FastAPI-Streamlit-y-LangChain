@@ -24,7 +24,7 @@ class CustomOutputParser(AgentOutputParser):
         else:
             return AgentAction(tool=llm_output, tool_input=llm_output, log=llm_output)
 
-def create_custom_tools_agent(model: LLM, tools: List[BaseTool], prompt: PromptTemplate):
+def create_custom_tools_agent(model: LLM, tools: List[BaseTool], prompt: StringPromptTemplate):
     tool_names = [tool.name for tool in tools]
     tool_strings = "\n".join([f"{tool.name}: {tool.description}" for tool in tools])
 
