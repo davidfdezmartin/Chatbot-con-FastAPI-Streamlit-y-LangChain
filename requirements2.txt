@@ -1,4 +1,6 @@
-langchain_core
+langchain==0.0.137
+langchain-wikipedia==0.1.3
+langchain-arxiv==0.1.3
 python-dotenv
 streamlit
 langchain_community
@@ -12,8 +14,3 @@ fastapi
 uvicorn
 sse_starlette
 googletrans
-wikipedia
-arxiv
-langchain-wikipedia
-langchain-arxiv
-transformers
