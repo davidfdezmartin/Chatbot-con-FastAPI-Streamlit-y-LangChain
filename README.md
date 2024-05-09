@@ -37,6 +37,7 @@ Este repositorio contiene un chatbot desarrollado utilizando FastAPI, Streamlit 
 
 3. **Instalar las dependencias:**
    - Con el entorno virtual activado, ejecuta el siguiente comando para instalar las dependencias:
+   -  Nota: Hay versión 1 y version 2.
      ```
      pip install -r requirements.txt
      ```
@@ -66,6 +67,7 @@ Este repositorio contiene un chatbot desarrollado utilizando FastAPI, Streamlit 
    - Navega hasta el directorio del repositorio.
    - Asegúrate de tener el entorno virtual activado.
    - Ejecuta el siguiente comando para iniciar la aplicación Streamlit:
+   - Nota: Hay versión 1 y version 2.
      ```
      streamlit run streamlit_app.py
      ```
