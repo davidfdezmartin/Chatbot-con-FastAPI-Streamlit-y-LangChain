@@ -1,4 +1,5 @@
-Analicemos el fragmento relevante del código de carga de documentos en main.py (el API creado).
+Analicemos el fragmento relevante del código de carga de documentos en main.py (el API creado):
+
 @app.on_event("startup")
 async def startup_event():
     embeddings = OllamaEmbeddings()
