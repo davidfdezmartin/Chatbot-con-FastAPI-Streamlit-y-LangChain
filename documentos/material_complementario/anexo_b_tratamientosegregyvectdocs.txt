@@ -1,0 +1,49 @@
+Analicemos el fragmento relevante del código de carga de documentos en main.py (el API creado).
+@app.on_event("startup")
+async def startup_event():
+    embeddings = OllamaEmbeddings()
+
+    pdf_loader = PyPDFDirectoryLoader("./ruta/al/directorio/pdf")
+    pdf_docs = pdf_loader.load()
+
+    csv_loader = CSVLoader("./ruta/al/archivo.csv")
+    csv_docs = csv_loader.load()
+
+    json_loader = JSONLoader("./ruta/al/archivo.json")
+    json_docs = json_loader.load()
+
+    docs = pdf_docs + csv_docs + json_docs
+
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    final_documents = text_splitter.split_documents(docs)
+    vectors = FAISS.from_documents(final_documents, embeddings)
+
+    app.state.vectors = vectors
+
+    wikipedia_api_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=200)
+    app.state.wikipedia_tool = WikipediaQueryRun(api_wrapper=wikipedia_api_wrapper)
+
+    arxiv_api_wrapper = ArxivAPIWrapper(top_k_results=1, doc_content_chars_max=200)
+    app.state.arxiv_tool = ArxivQueryRun(api_wrapper=arxiv_api_wrapper)
+
+Al revisar el código, vemos que la carga de documentos se realiza utilizando las clases PyPDFDirectoryLoader, CSVLoader y JSONLoader de langchain.
+
+
+Algunas observaciones para utilizar el API correctamente y entender la carga de documentos:
+
+1.	Asegurarse de que las rutas "./ruta/al/directorio/pdf", "./ruta/al/archivo.csv" y 
+"./ruta/al/archivo.json" sean las correctas y apunten a los directorios y archivos adecuados en su sistema de archivos.
+
+2.	Verificar que los archivos PDF, CSV y JSON existan en las rutas especificadas y sean válidos.
+
+3.	El código utiliza las clases de carga adecuadas para cada tipo de archivo: PyPDFDirectoryLoader para archivos 
+PDF, CSVLoader para archivos CSV y JSONLoader para archivos JSON.
+
+4.	Los documentos cargados se combinan en una sola lista docs utilizando la concatenación de listas (docs = pdf_docs + csv_docs + json_docs).
+
+5.	Luego, los documentos se dividen en fragmentos más pequeños utilizando RecursiveCharacterTextSplitter 
+con un tamaño de fragmento de 1000 caracteres y una superposición de 200 caracteres.
+
+6.	Los documentos divididos se vectorizan utilizando FAISS.from_documents() con los embeddings de OllamaEmbeddings.
+
+7.	Los vectores resultantes se almacenan en app.state.vectors para su posterior uso en el endpoint /ask.

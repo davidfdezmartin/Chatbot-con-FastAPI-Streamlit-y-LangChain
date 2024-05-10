@@ -1,0 +1,20 @@
+Diagrama Mermaid
+
+A[Inicio: Usuario accede a la aplicación Streamlit] --> B[Usuario ingresa pregunta en español]
+B --> C[Pregunta enviada a la API FastAPI]
+C --> D[Traducción de la pregunta al inglés usando googletrans]
+D --> E[Agente personalizado recibe la pregunta traducida]
+E --> F{Tipo de pregunta}
+F --> |Pregunta general| G[Búsqueda en Wikipedia usando WikipediaQueryRun]
+F --> |Pregunta médica específica| H[Búsqueda en documentos médicos utilizando búsqueda personalizada]
+F --> |Pregunta sobre estudios científicos| I[Búsqueda en Arxiv usando ArxivQueryRun]
+G --> J[Resultados de Wikipedia]
+H --> K[Resultados de documentos médicos]
+I --> L[Resultados de Arxiv]
+J --> M[Generación de respuesta en inglés utilizando el modelo GPT-J y resultados combinados]
+K --> M
+L --> M
+M --> N[Traducción de la respuesta al español usando googletrans]
+N --> O[Respuesta traducida al español devuelta a la interfaz de usuario de Streamlit]
+O --> P[Respuesta en español mostrada al usuario]
+P --> Q[Expansión: Detalles adicionales y contexto utilizado]
