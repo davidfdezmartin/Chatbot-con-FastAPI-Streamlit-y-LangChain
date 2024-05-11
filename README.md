@@ -33,6 +33,36 @@ GROQ_API_KEY=TU_CLAVE_API_GROQ
 ### Caché
 El sistema utiliza `aiocache` para caché en memoria, mejorando la eficiencia y la velocidad de respuesta del sistema. La configuración por defecto es suficiente para la mayoría de los casos, pero se puede configurar para usar Redis si se requiere persistencia y rendimiento mejorado.
 
+## Configuración Avanzada de Caché con Redis
+
+La aplicación está preparada para utilizar Redis como un sistema de caché para mejorar el rendimiento al almacenar respuestas frecuentes y reducir la carga en los servidores. Para habilitar esta funcionalidad, sigue estos pasos:
+
+### Instalación de Redis
+
+1. **Instalar Redis en tu sistema local o servidor:**
+   - Puedes descargar Redis desde [la página oficial](https://redis.io/download) o utilizar un servicio gestionado de Redis proporcionado por servicios de hosting como Heroku, Amazon Web Services, o Google Cloud Platform.
+
+2. **Configuración de Redis:**
+   - Asegúrate de que Redis está corriendo en tu sistema y toma nota del puerto y la dirección IP (usualmente `localhost` en el puerto `6379`).
+
+### Configurar Redis en la Aplicación
+
+Para utilizar Redis como backend de caché:
+
+1. **Descomenta las líneas en `streamlit_app.py` relacionadas con `aioredis` y `aiocache`.**
+   - Estas líneas conectan la aplicación con tu instancia de Redis y configuran `aiocache` para usar Redis como almacenamiento de caché.
+
+2. **Ajusta las variables de conexión a Redis si es necesario.**
+   - Si estás utilizando una configuración no estándar o un servicio gestionado de Redis, ajusta las variables de conexión en el código para reflejar tu configuración específica.
+
+### Dependencias
+
+Asegúrate de que `aioredis` y `aiocache` están instalados. Si no están presentes en tu entorno, instálalos usando:
+
+```
+pip install aioredis aiocache
+```
+
 ## Uso de la API
 
 Ejecutar la aplicación FastAPI:
