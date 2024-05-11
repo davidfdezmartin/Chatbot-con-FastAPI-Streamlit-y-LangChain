@@ -1,62 +1,48 @@
 import os
 from fastapi import FastAPI, Request
-from langchain_groq import ChatGroq
-from langchain_community.embeddings import OllamaEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_core.prompts import ChatPromptTemplate
-from langchain.chains import create_retrieval_chain
-from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders import PyPDFDirectoryLoader
-from langchain.document_loaders import CSVLoader, JSONLoader
-from dotenv import load_dotenv
 from googletrans import Translator
-from langchain_community.tools import WikipediaQueryRun
-from langchain_community.utilities import WikipediaAPIWrapper
-from langchain_community.tools import ArxivQueryRun
-from langchain_community.utilities import ArxivAPIWrapper
+
+from langchain_groq import ChatGroq
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_community.embeddings import OllamaEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_community.tools import WikipediaQueryRun, ArxivQueryRun
+from langchain_community.utilities import WikipediaAPIWrapper, ArxivAPIWrapper
+from langchain.document_loaders import CSVLoader, JSONLoader, PyPDFDirectoryLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
 from custom_agent import create_custom_tools_agent
+from dotenv import load_dotenv
 
 load_dotenv()
 
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
+if not GROQ_API_KEY:
+    raise ValueError("No se ha configurado la clave API de GROQ en las variables de entorno.")
+
 app = FastAPI()
 
-os.environ['GROQ_API_KEY'] = os.getenv("GROQ_API_KEY")
-groq_api_key = os.getenv('GROQ_API_KEY')
-
-model_name = "ydshieh/tiny-random-gptj-for-question-answering"
-model = ChatGroq(model_name=model_name, groq_api_key=groq_api_key)
+model_name = "ydshieh/tiny-random-gptj-para-responder-preguntas"
+model = ChatGroq(model_name=model_name, groq_api_key=GROQ_API_KEY)
 
 prompt = ChatPromptTemplate.from_template(
     """
-    Answer the questions based on the context provided.
-    Provide the most accurate answer based on the question.
+    Responda las preguntas según el contexto proporcionado.
+    Proporcione la respuesta más precisa según la pregunta.
     <context>
     {context}
     </context>
-    Questions: {input}
+    Preguntas: {input}
     """
 )
 
 @app.on_event("startup")
 async def startup_event():
     embeddings = OllamaEmbeddings()
-
-    pdf_loader = PyPDFDirectoryLoader("./ruta/al/directorio/pdf")
-    pdf_docs = pdf_loader.load()
-
-    csv_loader = CSVLoader("./ruta/al/archivo.csv")
-    csv_docs = csv_loader.load()
-
-    json_loader = JSONLoader("./ruta/al/archivo.json")
-    json_docs = json_loader.load()
-
-    docs = pdf_docs + csv_docs + json_docs
-
+    docs = await load_documents()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     final_documents = text_splitter.split_documents(docs)
     vectors = FAISS.from_documents(final_documents, embeddings)
-
     app.state.vectors = vectors
 
     wikipedia_api_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=200)
@@ -67,19 +53,29 @@ async def startup_event():
 
 @app.post("/ask")
 async def ask_question(request: Request):
-    prompt1 = await request.json()
-    prompt1 = prompt1["question"]
+    data = await request.json()
+    question = data.get("question")
+    if not question:
+        return {"error": "No se proporcionó pregunta."}
 
     translator = Translator()
-    prompt1_en = translator.translate(prompt1, dest='en').text
+    question_en = translator.translate(question, dest='en').text
 
     tools = [app.state.wikipedia_tool, app.state.arxiv_tool]
-    
-    # Crear el agente utilizando el modelo GPT-J con Groq
     agent = create_custom_tools_agent(model, tools, prompt)
-    
-    response = agent.invoke({'input': prompt1_en})
 
+    response = agent.invoke({'input': question_en})
     response_es = translator.translate(response['output'], dest='es').text
 
-    return {"respuesta": response_es, "contexto": response["intermediate_steps"]}
+    return {"answer": response_es, "context": response["intermediate_steps"]}
+
+async def load_documents():
+    try:
+        pdf_loader = PyPDFDirectoryLoader("./ruta/al/directorio/pdf")
+        csv_loader = CSVLoader("./ruta/al/archivo.csv")
+        json_loader = JSONLoader("./ruta/al/archivo.json")
+        return pdf_loader.load() + csv_loader.load() + json_loader.load()
+    except Exception as e:
+        print(f"Error cargando documentos: {e}")
+        return []
+
