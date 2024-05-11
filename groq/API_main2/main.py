@@ -1,6 +1,10 @@
 import os
 from fastapi import FastAPI, Request
 from googletrans import Translator
+from functools import lru_cache
+
+from aiocache import Cache
+from aiocache.serializers import JsonSerializer
 
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
@@ -16,14 +20,19 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+app = FastAPI()
+cache = Cache.from_url("memory://", serializer=JsonSerializer())
+
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 if not GROQ_API_KEY:
     raise ValueError("No se ha configurado la clave API de GROQ en las variables de entorno.")
 
-app = FastAPI()
+@lru_cache
+def get_model():
+    model_name = "ydshieh/tiny-random-gptj-para-responder-preguntas"
+    return ChatGroq(model_name=model_name, groq_api_key=GROQ_API_KEY)
 
-model_name = "ydshieh/tiny-random-gptj-para-responder-preguntas"
-model = ChatGroq(model_name=model_name, groq_api_key=GROQ_API_KEY)
+model = get_model()
 
 prompt = ChatPromptTemplate.from_template(
     """
@@ -69,6 +78,7 @@ async def ask_question(request: Request):
 
     return {"answer": response_es, "context": response["intermediate_steps"]}
 
+@cache.cached(ttl=3600)  # Cache the function for 1 hour
 async def load_documents():
     try:
         pdf_loader = PyPDFDirectoryLoader("./ruta/al/directorio/pdf")
@@ -78,4 +88,3 @@ async def load_documents():
     except Exception as e:
         print(f"Error cargando documentos: {e}")
         return []
-
