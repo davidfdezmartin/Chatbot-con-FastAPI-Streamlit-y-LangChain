@@ -1,86 +1,82 @@
+
 # Chatbot con FastAPI, Streamlit y LangChain
 
-Este repositorio contiene un chatbot desarrollado utilizando FastAPI, Streamlit y LangChain, junto con el modelo de lenguaje GPT-J y el almacenamiento vectorial. El chatbot puede responder preguntas basadas en documentos proporcionados en formatos PDF, CSV y JSON, y utiliza herramientas adicionales como Wikipedia y Arxiv para proporcionar respuestas más completas.
+Este repositorio contiene un chatbot desarrollado utilizando FastAPI, Streamlit y LangChain, junto con los modelos de lenguaje Ollama 3 y un LLM genérico. El chatbot puede responder preguntas basadas en documentos proporcionados en formatos PDF, CSV y JSON, y utiliza herramientas adicionales como Wikipedia y Arxiv para proporcionar respuestas más completas.
+
+![Arquitectura del Chatbot](readme.webp)
 
 ## Requisitos previos
 - Python 3.7 o superior
-- Cuenta de Groq
+- Cuenta de Groq (si aplicable)
 
-## Pasos de configuración
+## Configuración
 
-1. **Clonar el repositorio:**
-   - Abre una terminal o línea de comandos.
-   - Navega hasta el directorio donde deseas clonar el repositorio.
-   - Ejecuta el siguiente comando para clonar el repositorio:
-     ```
-     git clone https://github.com/tu-usuario/nombre-del-repositorio.git
-     ```
+### Clonar el repositorio
+```
+git clone https://github.com/davidfdezmartin/Chatbot-con-FastAPI-Streamlit-y-LangChain.git
+cd Chatbot-con-FastAPI-Streamlit-y-LangChain
+```
 
-2. **Crear y activar un entorno virtual (opcional pero recomendado):**
-   - Navega hasta el directorio del repositorio clonado:
-     ```
-     cd nombre-del-repositorio
-     ```
-   - Crea un nuevo entorno virtual:
-     ```
-     python -m venv venv
-     ```
-   - Activa el entorno virtual:
-     - En Windows:
-       ```
-       venv\Scripts\activate
-       ```
-     - En macOS y Linux:
-       ```
-       source venv/bin/activate
-       ```
+### Crear y activar un entorno virtual
+En Windows:
+```
+python -m venv venv
+venv\Scripts\activate
+```
+En macOS y Linux:
+```
+python -m venv venv
+source venv/bin/activate
+```
 
-3. **Instalar las dependencias:**
-   - Con el entorno virtual activado, ejecuta el siguiente comando para instalar las dependencias:
-   -  Nota: Hay versión 1 y version 2.
-     ```
-     pip install -r requirements.txt
-     ```
+### Instalar las dependencias
+```
+pip install -r requirements.txt
+```
 
-4. **Configurar las variables de entorno:**
-   - En el directorio raíz del repositorio, crea un nuevo archivo llamado `.env`.
-   - Abre el archivo `.env` en un editor de texto.
-   - Agrega la siguiente línea al archivo, reemplazando `TU_CLAVE_API_GROQ` con tu clave de API de Groq:
-     ```
-     GROQ_API_KEY=TU_CLAVE_API_GROQ
-     ```
-   - Guarda y cierra el archivo `.env`.
+### Configurar las variables de entorno
+Crear un archivo `.env` en el directorio raíz y añadir la clave API:
+```
+GROQ_API_KEY=TU_CLAVE_API_GROQ
+```
 
-## Pasos para abrir y utilizar la API
+## Uso de la API
 
-1. **Ejecutar la aplicación FastAPI:**
-   - En una terminal o línea de comandos, navega hasta el directorio del repositorio.
-   - Asegúrate de tener el entorno virtual activado.
-   - Ejecuta el siguiente comando para iniciar la aplicación FastAPI:
-     ```
-     uvicorn main:app --reload
-     ```
-   - La API estará disponible en `http://localhost:8000`.
+### Ejecutar la aplicación FastAPI
+```
+uvicorn main:app --reload
+```
+La API estará disponible en `http://localhost:8000`.
 
-2. **Ejecutar la aplicación Streamlit:**
-   - Abre otra terminal o línea de comandos.
-   - Navega hasta el directorio del repositorio.
-   - Asegúrate de tener el entorno virtual activado.
-   - Ejecuta el siguiente comando para iniciar la aplicación Streamlit:
-   - Nota: Hay versión 1 y version 2.
-     ```
-     streamlit run streamlit_app.py
-     ```
-   - Se abrirá una ventana del navegador con la interfaz de usuario de Streamlit.
+### Ejecutar la aplicación Streamlit
+```
+streamlit run streamlit_app.py
+```
 
-3. **Interactuar con el chatbot:**
-   - En la interfaz de usuario de Streamlit, ingresa tu pregunta en el campo de texto provisto.
-   - Haz clic en el botón "Obtener respuesta" para enviar la pregunta al chatbot.
-   - El chatbot procesará la pregunta y mostrará la respuesta generada junto con el contexto relevante.
-   - Puedes expandir la sección "Detalles adicionales" para ver el contexto y los pasos intermedios utilizados por el chatbot para generar la respuesta.
+## Diagrama de Flujo del Proceso
+```mermaid
+graph TD
+    A[Inicio: Usuario accede a la aplicación Streamlit] --> B[Usuario ingresa pregunta en español]
+    B --> C[Pregunta enviada a la API FastAPI]
+    C --> D[Traducción de la pregunta al inglés usando Google Translate]
+    D --> E[Agente personalizado recibe la pregunta traducida]
+    E --> F{Tipo de pregunta}
+    F --> |Pregunta general| G[Búsqueda en Wikipedia]
+    F --> |Pregunta médica específica| H[Búsqueda en documentos médicos]
+    F --> |Pregunta sobre estudios científicos| I[Búsqueda en Arxiv]
+    G --> J[Compilación de resultados de Wikipedia]
+    H --> K[Compilación de resultados de documentos médicos]
+    I --> L[Compilación de resultados de Arxiv]
+    J --> M[Generación de respuesta en inglés utilizando el modelo Ollama 3 LLM]
+    K --> M
+    L --> M
+    M --> N[Traducción de la respuesta al español usando Google Translate]
+    N --> O[Respuesta traducida al español devuelta a la interfaz de usuario de Streamlit]
+    O --> P[Respuesta en español mostrada al usuario]
+    P --> Q[Expansión: Detalles adicionales y contexto utilizado]
+```
 
-¡Eso es todo! Ahora puedes utilizar el chatbot y explorar sus capacidades de respuesta basadas en los documentos proporcionados y las herramientas adicionales integradas.
-
+## Contacto y Soporte
 Si tienes alguna pregunta o encuentras algún problema, no dudes en abrir un issue en este repositorio.
 
 ¡Disfruta usando el chatbot!
