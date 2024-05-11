@@ -14,3 +14,4 @@ fastapi
 uvicorn
 sse_starlette
 googletrans
+aiocache  # Nueva adición para caché asincrónico
