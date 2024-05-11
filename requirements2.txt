@@ -15,3 +15,6 @@ uvicorn
 sse_starlette
 googletrans
 aiocache  # Nueva adición para caché asincrónico
+aioredis  # Opcional, para usar Redis como backend de caché
+
+
