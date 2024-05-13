@@ -3,7 +3,7 @@
 
 Este repositorio contiene un chatbot desarrollado utilizando FastAPI, Streamlit y LangChain, junto con los modelos de lenguaje Ollama 3 y un LLM genérico. El chatbot puede responder preguntas basadas en documentos proporcionados en formatos PDF, CSV y JSON, y utiliza herramientas adicionales como Wikipedia y Arxiv para proporcionar respuestas más completas.
 
-![Arquitectura del Chatbot](llamalang.jpg)
+![Arquitectura del Chatbot](/documentos_y_matcomplement/diagramas_graficos/llamalang.jpg)
 
 ## Requisitos previos
 - Python 3.7 o superior
@@ -19,7 +19,7 @@ cd nombre-del-repositorio
 
 Instalar las dependencias:
 ```
-pip install -r requirements.txt
+pip install -r requirements/requirements.txt
 ```
 
 ## Configuración
