@@ -19,7 +19,7 @@ cd nombre-del-repositorio
 
 Instalar las dependencias:
 ```
-pip install -r requirements/requirements.txt
+pip install -r requirements/requirements2.txt
 ```
 
 ## Configuración
