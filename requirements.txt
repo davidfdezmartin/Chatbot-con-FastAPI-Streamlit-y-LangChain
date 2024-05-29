@@ -1,0 +1,4 @@
+ROOT=https://raw.githubusercontent.com/davidfdezmartin/Chatbot-con-FastAPI-Streamlit-y-LangChain/main
+HUGGING_FACE_API_TOKEN=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
+GROQ_API_KEY=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
+PDF_DIRECTORY_PATH=./data
