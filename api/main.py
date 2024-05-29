@@ -38,16 +38,18 @@ def get_model():
 
 model = get_model()
 
-prompt = ChatPromptTemplate.from_template(
-    """
-    Responda las preguntas según el contexto proporcionado.
-    Proporcione la respuesta más precisa según la pregunta.
-    <context>
-    {context}
-    </context>
-    Preguntas: {input}
-    """
-)
+prompt_template = """
+Utiliza la siguiente información para responder la pregunta del usuario.
+Si no sabes la respuesta, simplemente di que no lo sabes, no inventes una respuesta.
+
+Contexto: {context}
+Pregunta: {input}
+
+Devuelve solo la respuesta útil a continuación y nada más.
+Respuesta útil:
+"""
+
+prompt = ChatPromptTemplate.from_template(prompt_template)
 
 @app.on_event("startup")
 async def startup_event():
