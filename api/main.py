@@ -16,6 +16,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from custom_agent import create_custom_tools_agent
 from dotenv import load_dotenv
 
+# from disgenet_wrapper import DisGeNETAPIWrapper, DisGeNETQueryRun
+
 # Cargar variables de entorno
 load_dotenv()
 
