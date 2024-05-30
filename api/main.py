@@ -1,4 +1,5 @@
 # se lanza desde el terminal con uvicorn api.main:app --reload
+# y el servidor montado se vera en: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
 
 import os
 import time
@@ -7,7 +8,7 @@ from googletrans import Translator
 from functools import lru_cache
 from aiocache import Cache
 from aiocache.serializers import JsonSerializer
-from langchain.llms import ChatGroq
+from langchain_community.llms import ChatGroq  # Cambiado a langchain_community
 from langchain.prompts import ChatPromptTemplate
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
