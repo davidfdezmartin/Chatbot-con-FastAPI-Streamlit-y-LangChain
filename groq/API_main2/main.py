@@ -13,7 +13,7 @@ from langchain_community.tools import WikipediaQueryRun, ArxivQueryRun
 from langchain_community.utilities import WikipediaAPIWrapper, ArxivAPIWrapper
 from langchain.document_loaders import CSVLoader, JSONLoader, PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from custom_agent import create_custom_tools_agent
+from api.custom_agent import create_custom_tools_agent
 from dotenv import load_dotenv
 
 load_dotenv()

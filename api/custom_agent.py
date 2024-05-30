@@ -5,7 +5,6 @@ from typing import List, Union
 from langchain.schema import AgentAction, AgentFinish
 from langchain.chains import LLMChain
 from langchain.tools.base import BaseTool
-
 class CustomAgent(LLMSingleActionAgent):
     @property
     def input_keys(self):

@@ -1,12 +1,8 @@
-# se lanza desde el terminal con uvicorn api.main:app --reload
-# y el servidor montado se vera en: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 from aiocache import Cache
 from aiocache.serializers import JsonSerializer
 from googletrans import Translator
-from langchain_community.llms import ChatGroq  # Cambiado a langchain_community
 from langchain.prompts import ChatPromptTemplate
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
@@ -16,6 +12,7 @@ from langchain.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from custom_agent import create_custom_tools_agent
 from disgenet import get_disease_associated_genes, get_gene_associated_diseases
+from langchain.llms import HuggingFaceHub
 
 load_dotenv()
 
@@ -26,16 +23,18 @@ cache = Cache(Cache.MEMORY, serializer=JsonSerializer())
 
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 PDF_DIRECTORY_PATH = os.getenv("PDF_DIRECTORY_PATH")
+HUGGING_FACE_API_TOKEN = os.getenv('HUGGING_FACE_API_TOKEN')
 
 if not GROQ_API_KEY:
     raise ValueError("No se ha configurado la clave API de GROQ en las variables de entorno.")
 if not PDF_DIRECTORY_PATH:
     raise ValueError("No se ha configurado el directorio de PDFs en las variables de entorno.")
+if not HUGGING_FACE_API_TOKEN:
+    raise ValueError("No se ha configurado el token API de Hugging Face en las variables de entorno.")
 
 @lru_cache
 def get_model():
-    model_name = "ydshieh/tiny-random-gptj-para-responder-preguntas"
-    return ChatGroq(model_name=model_name, groq_api_key=GROQ_API_KEY)
+    return HuggingFaceHub(repo_id="gpt2", model_kwargs={"temperature": 0.7}, huggingfacehub_api_token=HUGGING_FACE_API_TOKEN)
 
 model = get_model()
 
