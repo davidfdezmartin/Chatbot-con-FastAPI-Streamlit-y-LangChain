@@ -15,3 +15,5 @@ typer==0.09.0
 wikipedia-api
 transformers
 sentence-transformers
+requests
+aiocache
