@@ -18,3 +18,4 @@ langchain-groq
 wikipedia
 arxiv
 langchainhub
+python-dotenv

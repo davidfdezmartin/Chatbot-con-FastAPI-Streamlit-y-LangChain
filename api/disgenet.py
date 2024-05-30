@@ -1,40 +1,43 @@
-import requests
 import os
 from dotenv import load_dotenv
+import requests
 
-load_dotenv()
+load_dotenv()  # Load environment variables from .env file
+DISGENET_API_KEY = os.getenv("DISGENET_API_KEY")
+import os
+from dotenv import load_dotenv
+import requests
 
-DISGENET_EMAIL = os.getenv("DISGENET_EMAIL")
-DISGENET_PASSWORD = os.getenv("DISGENET_PASSWORD")
+load_dotenv()  # Load environment variables from .env file
+DISGENET_API_KEY = os.getenv("DISGENET_API_KEY")
+DISGENET_API_KEY = "76360be811d4ee08ddb1369c58fa0f14d347704b"
 
 api_host = "https://www.disgenet.org/api"
-api_key = None
+api_key = DISGENET_API_KEY
 session = requests.Session()
+session.headers.update({"Authorization": f"Bearer {api_key}"})
 
-def authenticate():
-    global api_key
-    auth_params = {"email": DISGENET_EMAIL, "password": DISGENET_PASSWORD}
-    try:
-        response = session.post(api_host + '/auth/', data=auth_params)
-        if response.status_code == 200:
-            json_response = response.json()
-            api_key = json_response.get("token")
-            session.headers.update({"Authorization": f"Bearer {api_key}"})
-        else:
-            print(response.status_code)
-            print(response.text)
-    except requests.exceptions.RequestException as e:
-        print(e)
-        print("Error during the request.")
-
-def get_disease_associated_genes(gene_id, source='UNIPROT'):
-    if not api_key:
-        authenticate()
-    response = session.get(f"{api_host}/gda/gene/{gene_id}", params={'source': source})
-    return response.json()
-
-def get_gene_associated_diseases(disease_id, source='UNIPROT'):
-    if not api_key:
-        authenticate()
+def get_genes_associated_with_disease(disease_id, source='UNIPROT'):
     response = session.get(f"{api_host}/gda/disease/{disease_id}", params={'source': source})
+    response.raise_for_status()
     return response.json()
+
+# Example usage:
+disease_id = "C0003856"
+genes_associated_with_disease = get_genes_associated_with_disease(disease_id)
+print(genes_associated_with_disease)
+
+api_host = "https://www.disgenet.org/api"
+api_key = DISGENET_API_KEY
+session = requests.Session()
+session.headers.update({"Authorization": f"Bearer {api_key}"})
+
+def get_genes_associated_with_disease(disease_id, source='UNIPROT'):
+    response = session.get(f"{api_host}/gda/disease/{disease_id}", params={'source': source})
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+disease_id = "C0003856"
+genes_associated_with_disease = get_genes_associated_with_disease(disease_id)
+print(genes_associated_with_disease)
