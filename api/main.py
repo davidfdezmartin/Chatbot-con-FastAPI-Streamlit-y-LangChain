@@ -25,11 +25,15 @@ cache = Cache.from_url("memory://", serializer=JsonSerializer())
 
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 PDF_DIRECTORY_PATH = os.getenv("PDF_DIRECTORY_PATH")
+# DISGENET_EMAIL = os.getenv("DISGENET_EMAIL")
+# DISGENET_PASSWORD = os.getenv("DISGENET_PASSWORD")
 
 if not GROQ_API_KEY:
     raise ValueError("No se ha configurado la clave API de GROQ en las variables de entorno.")
 if not PDF_DIRECTORY_PATH:
     raise ValueError("No se ha configurado el directorio de PDFs en las variables de entorno.")
+# if not DISGENET_EMAIL or not DISGENET_PASSWORD:
+    raise ValueError("No se han configurado las credenciales de DisGeNET en las variables de entorno.")
 
 @lru_cache
 def get_model():
@@ -67,6 +71,9 @@ async def startup_event():
     arxiv_api_wrapper = ArxivAPIWrapper(top_k_results=1, doc_content_chars_max=200)
     app.state.arxiv_tool = ArxivQueryRun(api_wrapper=arxiv_api_wrapper)
 
+    #disgenet_api_wrapper = DisGeNETAPIWrapper(email=DISGENET_EMAIL, password=DISGENET_PASSWORD)
+    #app.state.disgenet_tool = DisGeNETQueryRun(api_wrapper=disgenet_api_wrapper)
+
 @app.post("/ask")
 async def ask_question(request: Request):
     start_time = time.time()
@@ -80,7 +87,7 @@ async def ask_question(request: Request):
     translator = Translator()
     question_en = translator.translate(question, dest='en').text
     
-    tools = [app.state.wikipedia_tool, app.state.arxiv_tool]
+    tools = [app.state.wikipedia_tool, app.state.arxiv_tool] #añadir app.state.disgenet_tool
     agent = create_custom_tools_agent(model, tools, prompt)
     
     cached_response = await cache.get(question_en)
