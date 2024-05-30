@@ -1,13 +1,11 @@
 # se lanza desde el terminal con uvicorn api.main:app --reload
 # y el servidor montado se vera en: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
 
-import os
-import time
 from fastapi import FastAPI, Request
-from googletrans import Translator
-from functools import lru_cache
+from dotenv import load_dotenv
 from aiocache import Cache
 from aiocache.serializers import JsonSerializer
+from googletrans import Translator
 from langchain_community.llms import ChatGroq  # Cambiado a langchain_community
 from langchain.prompts import ChatPromptTemplate
 from langchain.embeddings import HuggingFaceEmbeddings
@@ -18,14 +16,13 @@ from langchain.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from custom_agent import create_custom_tools_agent
 from disgenet import get_disease_associated_genes, get_gene_associated_diseases
-from dotenv import load_dotenv
 
-# Cargar variables de entorno
 load_dotenv()
 
 app = FastAPI()
 
-cache = Cache.from_url("memory://", serializer=JsonSerializer())
+# Configurar el caché correctamente
+cache = Cache(Cache.MEMORY, serializer=JsonSerializer())
 
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 PDF_DIRECTORY_PATH = os.getenv("PDF_DIRECTORY_PATH")
