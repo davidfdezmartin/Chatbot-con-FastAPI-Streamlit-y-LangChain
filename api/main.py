@@ -1,18 +1,20 @@
+import os
+import time
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 from aiocache import Cache
 from aiocache.serializers import JsonSerializer
 from googletrans import Translator
+from langchain_community.llms import HuggingFaceHub
 from langchain.prompts import ChatPromptTemplate
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.tools import WikipediaQueryRun, ArxivQueryRun
 from langchain.utilities import WikipediaAPIWrapper, ArxivAPIWrapper
-from langchain.document_loaders import PyPDFDirectoryLoader
+from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from custom_agent import create_custom_tools_agent
 from disgenet import get_disease_associated_genes, get_gene_associated_diseases
-from langchain.llms import HuggingFaceHub
 
 load_dotenv()
 
