@@ -1,3 +1,5 @@
+# se lanza desde el terminal con uvicorn api.main:app --reload
+
 import os
 import time
 from fastapi import FastAPI, Request
