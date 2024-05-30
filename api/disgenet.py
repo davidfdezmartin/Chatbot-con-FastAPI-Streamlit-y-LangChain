@@ -13,7 +13,7 @@ session = requests.Session()
 
 def authenticate():
     global api_key
-    auth_params = {"email": DISGENET_EMAIL, "password": DISGENET_PASSWORD}}
+    auth_params = {"email": DISGENET_EMAIL, "password": DISGENET_PASSWORD}
     try:
         response = session.post(api_host + '/auth/', data=auth_params)
         if response.status_code == 200:
