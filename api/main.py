@@ -14,9 +14,8 @@ from langchain.utilities import WikipediaAPIWrapper, ArxivAPIWrapper
 from langchain.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from custom_agent import create_custom_tools_agent
+from disgenet import get_disease_associated_genes, get_gene_associated_diseases
 from dotenv import load_dotenv
-
-# from disgenet_wrapper import DisGeNETAPIWrapper, DisGeNETQueryRun
 
 # Cargar variables de entorno
 load_dotenv()
@@ -27,15 +26,11 @@ cache = Cache.from_url("memory://", serializer=JsonSerializer())
 
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 PDF_DIRECTORY_PATH = os.getenv("PDF_DIRECTORY_PATH")
-# DISGENET_EMAIL = os.getenv("DISGENET_EMAIL")
-# DISGENET_PASSWORD = os.getenv("DISGENET_PASSWORD")
 
 if not GROQ_API_KEY:
     raise ValueError("No se ha configurado la clave API de GROQ en las variables de entorno.")
 if not PDF_DIRECTORY_PATH:
     raise ValueError("No se ha configurado el directorio de PDFs en las variables de entorno.")
-# if not DISGENET_EMAIL or not DISGENET_PASSWORD:
-    raise ValueError("No se han configurado las credenciales de DisGeNET en las variables de entorno.")
 
 @lru_cache
 def get_model():
@@ -73,9 +68,6 @@ async def startup_event():
     arxiv_api_wrapper = ArxivAPIWrapper(top_k_results=1, doc_content_chars_max=200)
     app.state.arxiv_tool = ArxivQueryRun(api_wrapper=arxiv_api_wrapper)
 
-    #disgenet_api_wrapper = DisGeNETAPIWrapper(email=DISGENET_EMAIL, password=DISGENET_PASSWORD)
-    #app.state.disgenet_tool = DisGeNETQueryRun(api_wrapper=disgenet_api_wrapper)
-
 @app.post("/ask")
 async def ask_question(request: Request):
     start_time = time.time()
@@ -89,7 +81,7 @@ async def ask_question(request: Request):
     translator = Translator()
     question_en = translator.translate(question, dest='en').text
     
-    tools = [app.state.wikipedia_tool, app.state.arxiv_tool] #añadir app.state.disgenet_tool
+    tools = [app.state.wikipedia_tool, app.state.arxiv_tool]
     agent = create_custom_tools_agent(model, tools, prompt)
     
     cached_response = await cache.get(question_en)
@@ -105,6 +97,16 @@ async def ask_question(request: Request):
     processing_time = end_time - start_time
     
     return {"answer": response_es, "context": response["intermediate_steps"], "processing_time": processing_time}
+
+@app.get("/disease_genes/{gene_id}")
+async def disease_genes(gene_id: str):
+    data = get_disease_associated_genes(gene_id)
+    return data
+
+@app.get("/gene_diseases/{disease_id}")
+async def gene_diseases(disease_id: str):
+    data = get_gene_associated_diseases(disease_id)
+    return data
 
 @cache.cached(ttl=3600)  # Cache the function for 1 hour
 async def load_documents():
