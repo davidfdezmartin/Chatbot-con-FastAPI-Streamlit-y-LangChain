@@ -41,3 +41,52 @@ def get_genes_associated_with_disease(disease_id, source='UNIPROT'):
 disease_id = "C0003856"
 genes_associated_with_disease = get_genes_associated_with_disease(disease_id)
 print(genes_associated_with_disease)
+
+# prueba de pedirle por esquizofrenia
+import requests
+
+# Set API endpoint and disease ID
+api_endpoint = "https://www.disgenet.org/api"
+disease_id = "C0025218"  # Schizophrenia
+
+# Set API key (replace with your own API key)
+api_key = "YOUR_API_KEY_HERE"
+
+# Set headers with API key
+headers = {"Authorization": f"Bearer {api_key}"}
+
+# Define parameters for the API request
+params = {
+    "disease": disease_id,
+    "source": "UNIPROT",  # Optional parameter
+    "format": "json"  # Optional parameter
+}
+
+# Send GET request to DisGeNET API
+response = requests.get(f"{api_endpoint}/gda/genes/disease/{disease_id}", headers=headers, params=params)
+
+# Check if the response was successful
+if response.status_code == 200:
+    # Parse JSON response
+    data = response.json()
+
+    # Print genes associated with Schizophrenia
+    print("Genes associated with Schizophrenia:")
+    for gene in data["genes"]:
+        print(f"Gene ID: {gene['geneId']}, Gene Symbol: {gene['geneSymbol']}")
+
+    # Print additional information and graphs (if available)
+    for gene in data["genes"]:
+        print(f"Gene ID: {gene['geneId']}, Gene Symbol: {gene['geneSymbol']}")
+        print("  Associated Diseases:")
+        for disease in gene["associatedDiseases"]:
+            print(f"    {disease['diseaseId']}: {disease['diseaseName']}")
+        print("  Gene-Disease Associations:")
+        for association in gene["geneDiseaseAssociations"]:
+            print(f"    {association['diseaseId']}: {association['diseaseName']}")
+        print("  Graphs:")
+        for graph in gene["graphs"]:
+            print(f"    {graph['graphId']}: {graph['graphName']}")
+
+else:
+    print("Error:", response.status_code)
