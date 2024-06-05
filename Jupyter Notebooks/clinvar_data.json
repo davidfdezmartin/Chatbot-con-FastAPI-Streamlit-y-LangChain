@@ -1,0 +1,14 @@
+[
+    {
+        "disease": "Cystic Fibrosis",
+        "gene": "CFTR",
+        "mutation": "deltaF508",
+        "description": "Cystic fibrosis is caused by mutations in the CFTR gene, with deltaF508 being the most common mutation."
+    },
+    {
+        "disease": "Sickle Cell Anemia",
+        "gene": "HBB",
+        "mutation": "E6V",
+        "description": "Sickle cell anemia is caused by a mutation in the HBB gene, leading to the production of abnormal hemoglobin."
+    }
+]

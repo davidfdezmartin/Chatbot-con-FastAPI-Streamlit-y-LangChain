@@ -1,0 +1,122 @@
+[
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "WDR19",
+    "mutation": "NM_025132.4(WDR19):c.716+2T>C",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "TMEM67",
+    "mutation": "NM_153704.6(TMEM67):c.2878G>T (p.Ala960Ser)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "NPHP4",
+    "mutation": "NM_015102.5(NPHP4):c.3959T>C (p.Leu1320Pro)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NM_000492.4(CFTR):c.2019_2022dup (p.Ala675fs)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "NPHP1",
+    "mutation": "NM_001128178.3(NPHP1):c.1255_1258del (p.Ser419fs)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NC_000007.13:g.(?_117120078)_(117176728_117180153)dup",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NM_000492.4(CFTR):c.202A>C (p.Lys68Gln)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NM_000492.4(CFTR):c.2363C>T (p.Thr788Ile)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NM_000492.4(CFTR):c.456G>C (p.Met152Ile)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NC_000007.13:g.(117267825_117282491)_(117282648_117292895)del",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NC_000007.13:g.(117144418_117149087)_(117149197_117170952)del",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "MBOAT7",
+    "mutation": "NM_024298.5(MBOAT7):c.1132C>T (p.Arg378Trp)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NM_000492.4(CFTR):c.1624G>A (p.Gly542Arg)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NC_000007.13:g.(117227888_117230406)_(117230494_117231987)del",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NM_000492.4(CFTR):c.1736A>C (p.Asp579Ala)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NC_000007.13:g.(117120202_117144306)_(117171169_117174329)del",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NC_000007.13:g.(?_117120078)_(117120202_117144306)del",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NM_000492.4(CFTR):c.1801A>C (p.Ile601Leu)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NM_000492.4(CFTR):c.1042A>G (p.Met348Val)",
+    "description": "No description available."
+  },
+  {
+    "disease": "Cystic Fibrosis",
+    "gene": "CFTR",
+    "mutation": "NM_000492.4(CFTR):c.2375_2377del (p.Arg792_Lys793delinsGln)",
+    "description": "No description available."
+  }
+]
