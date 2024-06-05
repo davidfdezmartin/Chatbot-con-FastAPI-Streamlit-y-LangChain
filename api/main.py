@@ -15,8 +15,7 @@ from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from custom_agent import create_custom_tools_agent
 from disgenet import get_disease_associated_genes, get_gene_associated_diseases
-from web_scraping import scrape_mayo_clinic
-from elasticsearch import Elasticsearch, helpers
+from functools import lru_cache
 import json
 
 load_dotenv()
@@ -29,9 +28,6 @@ cache = Cache(Cache.MEMORY, serializer=JsonSerializer())
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 PDF_DIRECTORY_PATH = os.getenv("PDF_DIRECTORY_PATH")
 HUGGING_FACE_API_TOKEN = os.getenv('HUGGING_FACE_API_TOKEN')
-ELASTIC_ENDPOINT = os.getenv('ELASTIC_ENDPOINT')
-ELASTIC_USERNAME = os.getenv('ELASTIC_USERNAME')
-ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
 
 if not GROQ_API_KEY:
     raise ValueError("No se ha configurado la clave API de GROQ en las variables de entorno.")
@@ -39,24 +35,8 @@ if not PDF_DIRECTORY_PATH:
     raise ValueError("No se ha configurado el directorio de PDFs en las variables de entorno.")
 if not HUGGING_FACE_API_TOKEN:
     raise ValueError("No se ha configurado el token API de Hugging Face en las variables de entorno.")
-if not ELASTIC_ENDPOINT or not ELASTIC_USERNAME or not ELASTIC_PASSWORD:
-    raise ValueError("No se ha configurado la información de Elasticsearch en las variables de entorno.")
 
-# Configuración de Elasticsearch
-es_url = f"https://{ELASTIC_USERNAME}:{ELASTIC_PASSWORD}@{ELASTIC_ENDPOINT}:443"
-es = Elasticsearch(es_url)
-
-# Verificar la conexión a Elasticsearch
-try:
-    es.ping()
-    print("Conexión exitosa a Elasticsearch")
-except Exception as e:
-    print(f"No se pudo establecer conexión: {e}")
-
-# Crear índice en Elasticsearch si no existe
-index_name = "genetic_information"
-if not es.indices.exists(index=index_name):
-    es.indices.create(index=index_name)
+json_path = './data/clinica_mayo.json'
 
 @lru_cache
 def get_general_model():
@@ -105,6 +85,7 @@ async def startup_event():
 @app.post("/ask")
 async def ask_question(request: Request):
     start_time = time.time()
+
     data = await request.json()
     question = data.get("question")
 
@@ -127,23 +108,11 @@ async def ask_question(request: Request):
         response = cached_response
     else:
         response = agent.invoke({'input': question_en})
-
-        # Realizar web scraping en Mayo Clinic
-        mayo_clinic_info = scrape_mayo_clinic(question_en)
-
-        # Buscar en Elasticsearch
-        es_results = search_data_in_es(index_name, question_en)
-
-        # Leer información de PDFs
-        pdf_info = read_pdfs(question_en)
-
-        combined_info = f"{response['output']}\nInformación de Mayo Clinic:\n{mayo_clinic_info}\nInformación de PDFs:\n{pdf_info}\n"
-        response['output'] = combined_info
-
         # Cache the response for 1 hour
         await cache.set(question_en, response, ttl=3600)
 
     response_es = translator.translate(response['output'], dest='es').text
+
     end_time = time.time()
     processing_time = end_time - start_time
 
@@ -163,35 +132,17 @@ async def gene_diseases(disease_id: str):
 async def load_documents():
     try:
         pdf_loader = PyPDFDirectoryLoader(PDF_DIRECTORY_PATH)
-        return pdf_loader.load()
+        documents = pdf_loader.load()
+        
+        # Cargar datos del archivo JSON
+        with open(json_path, 'r') as file:
+            mayo_clinic_data = json.load(file)
+        
+        # Combinar los documentos de PDF con los datos del archivo JSON
+        for entry in mayo_clinic_data:
+            documents.append(entry)
+        
+        return documents
     except Exception as e:
         print(f"Error cargando documentos: {e}")
         return []
-
-def search_data_in_es(index_name, query):
-    search_query = {
-        "query": {
-            "match": {
-                "disease": query
-            }
-        }
-    }
-    response = es.search(index=index_name, body=search_query)
-    return response['hits']['hits']
-
-def read_pdfs(disease):
-    import fitz  # PyMuPDF
-    import os
-
-    pdf_directory = 'data/'
-    extracted_text = ""
-    for filename in os.listdir(pdf_directory):
-        if filename.endswith(".pdf"):
-            doc = fitz.open(os.path.join(pdf_directory, filename))
-            for page_num in range(len(doc)):
-                page = doc.load_page(page_num)
-                extracted_text += page.get_text()
-    
-    if disease.lower() in extracted_text.lower():
-        return extracted_text
-    return "No relevant information found in PDFs."

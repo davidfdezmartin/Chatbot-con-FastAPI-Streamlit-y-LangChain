@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tfm 3.2 agente y streamlit</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h3 id="actualización-del-tfm">Actualización del TFM</h3>
+<h4 id="cambios-en-el-agente-personalizado-y-mejoras-en-la-funcionalidad-del-bot">Cambios en el Agente Personalizado y Mejoras en la Funcionalidad del Bot</h4>
+<ol>
+<li>
+<p><strong>Integración de Nuevas Fuentes de Información</strong>:</p>
+<ul>
+<li><strong>API de ClinVar</strong>: Se ha implementado una funcionalidad para consultar la API de ClinVar, lo que permite obtener información genética detallada sobre diversas enfermedades. Esto se realiza mediante una función que realiza consultas a la API y extrae datos relevantes como genes, mutaciones y descripciones asociadas.</li>
+<li><strong>Web Scraping de Clínica Mayo</strong>: Se ha añadido un componente de web scraping que utiliza BeautifulSoup para extraer información de la página web de la Clínica Mayo. Esta funcionalidad permite complementar la información genética obtenida de ClinVar con descripciones clínicas detalladas, tratamientos y síntomas.</li>
+</ul>
+</li>
+<li>
+<p><strong>Uso de Elasticsearch para Indexación y Búsqueda</strong>:</p>
+<ul>
+<li>Se ha mejorado la funcionalidad del bot mediante la integración de Elasticsearch para indexar y buscar datos genéticos. Esto permite realizar consultas rápidas y precisas sobre información genética almacenada.</li>
+<li><strong>Almacenamiento en Caché</strong>: Se utiliza <code>aiocache</code> para almacenar en caché las respuestas de las consultas, lo que mejora significativamente el tiempo de respuesta del bot.</li>
+</ul>
+</li>
+<li>
+<p><strong>Consulta de Documentos PDF</strong>:</p>
+<ul>
+<li>Se mantiene la funcionalidad de cargar y consultar documentos PDF almacenados en un directorio específico. Estos documentos son procesados y divididos en fragmentos utilizables mediante el <code>RecursiveCharacterTextSplitter</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Desuso de Wikipedia y Arxiv</strong>:</p>
+<ul>
+<li>Aunque inicialmente el bot fue diseñado para utilizar consultas en Wikipedia y Arxiv, con la nueva integración de ClinVar y el web scraping de la Clínica Mayo, el uso de estas herramientas ha disminuido. Sin embargo, podrían seguir siendo útiles en casos donde se necesite información adicional o de contexto que no esté disponible en las nuevas fuentes.</li>
+</ul>
+</li>
+<li>
+<p><strong>Mejoras en la Interfaz de Usuario con Streamlit</strong>:</p>
+<ul>
+<li>Se ha mejorado la interfaz de usuario de Streamlit para hacerla más intuitiva y fácil de usar. Ahora, los usuarios pueden ingresar preguntas sobre cualquier enfermedad genética y recibir respuestas detalladas que combinan información de múltiples fuentes.</li>
+</ul>
+</li>
+</ol>
+<h4 id="código-del-agente-personalizado-custom_agent.py">Código del Agente Personalizado (custom_agent.py)</h4>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> langchain<span class="token punctuation">.</span>agents <span class="token keyword">import</span> initialize_agent<span class="token punctuation">,</span> Tool
+<span class="token keyword">from</span> langchain<span class="token punctuation">.</span>prompts <span class="token keyword">import</span> ChatPromptTemplate
+
+<span class="token keyword">def</span> <span class="token function">create_custom_tools_agent</span><span class="token punctuation">(</span>llm<span class="token punctuation">,</span> tools<span class="token punctuation">,</span> prompt<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># Definir la plantilla del prompt</span>
+    prompt_template <span class="token operator">=</span> ChatPromptTemplate<span class="token punctuation">.</span>from_template<span class="token punctuation">(</span>prompt<span class="token punctuation">)</span>
+    
+    <span class="token comment"># Crear las herramientas personalizadas</span>
+    custom_tools <span class="token operator">=</span> <span class="token punctuation">[</span>
+        Tool<span class="token punctuation">(</span>
+            name<span class="token operator">=</span><span class="token string">"Wikipedia"</span><span class="token punctuation">,</span>
+            description<span class="token operator">=</span><span class="token string">"Busca información en Wikipedia"</span><span class="token punctuation">,</span>
+            func<span class="token operator">=</span>tools<span class="token punctuation">[</span><span class="token string">'wikipedia'</span><span class="token punctuation">]</span>
+        <span class="token punctuation">)</span><span class="token punctuation">,</span>
+        Tool<span class="token punctuation">(</span>
+            name<span class="token operator">=</span><span class="token string">"Arxiv"</span><span class="token punctuation">,</span>
+            description<span class="token operator">=</span><span class="token string">"Busca artículos en Arxiv"</span><span class="token punctuation">,</span>
+            func<span class="token operator">=</span>tools<span class="token punctuation">[</span><span class="token string">'arxiv'</span><span class="token punctuation">]</span>
+        <span class="token punctuation">)</span><span class="token punctuation">,</span>
+        Tool<span class="token punctuation">(</span>
+            name<span class="token operator">=</span><span class="token string">"ClinVar"</span><span class="token punctuation">,</span>
+            description<span class="token operator">=</span><span class="token string">"Busca información genética en ClinVar"</span><span class="token punctuation">,</span>
+            func<span class="token operator">=</span>tools<span class="token punctuation">[</span><span class="token string">'clinvar'</span><span class="token punctuation">]</span>
+        <span class="token punctuation">)</span><span class="token punctuation">,</span>
+        Tool<span class="token punctuation">(</span>
+            name<span class="token operator">=</span><span class="token string">"Mayo Clinic"</span><span class="token punctuation">,</span>
+            description<span class="token operator">=</span><span class="token string">"Realiza web scraping en la Clínica Mayo para obtener información detallada sobre enfermedades"</span><span class="token punctuation">,</span>
+            func<span class="token operator">=</span>tools<span class="token punctuation">[</span><span class="token string">'mayo'</span><span class="token punctuation">]</span>
+        <span class="token punctuation">)</span>
+    <span class="token punctuation">]</span>
+    
+    <span class="token comment"># Inicializar el agente con las herramientas personalizadas</span>
+    agent <span class="token operator">=</span> initialize_agent<span class="token punctuation">(</span>
+        tools<span class="token operator">=</span>custom_tools<span class="token punctuation">,</span>
+        llm<span class="token operator">=</span>llm<span class="token punctuation">,</span>
+        prompt<span class="token operator">=</span>prompt_template
+    <span class="token punctuation">)</span>
+    <span class="token keyword">return</span> agent
+</code></pre>
+<h4 id="código-de-la-aplicación-en-streamlit-streamlit_app.py">Código de la Aplicación en Streamlit (streamlit_app.py)</h4>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">import</span> streamlit <span class="token keyword">as</span> st
+<span class="token keyword">import</span> requests
+<span class="token keyword">import</span> aioredis
+<span class="token keyword">import</span> asyncio
+<span class="token keyword">from</span> aiocache <span class="token keyword">import</span> Cache
+<span class="token keyword">from</span> aiocache<span class="token punctuation">.</span>serializers <span class="token keyword">import</span> JsonSerializer
+
+<span class="token comment"># Configuración inicial de aiocache para usar Redis</span>
+<span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">get_cache</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    redis <span class="token operator">=</span> <span class="token keyword">await</span> aioredis<span class="token punctuation">.</span>create_redis_pool<span class="token punctuation">(</span><span class="token string">"redis://localhost:6379"</span><span class="token punctuation">)</span>
+    cache <span class="token operator">=</span> Cache<span class="token punctuation">(</span>Cache<span class="token punctuation">.</span>REDIS<span class="token punctuation">,</span> endpoint<span class="token operator">=</span><span class="token string">"localhost"</span><span class="token punctuation">,</span> port<span class="token operator">=</span><span class="token number">6379</span><span class="token punctuation">,</span> namespace<span class="token operator">=</span><span class="token string">"main"</span><span class="token punctuation">,</span> redis<span class="token operator">=</span>redis<span class="token punctuation">,</span> serializer<span class="token operator">=</span>JsonSerializer<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> cache
+
+<span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">get_response_from_cache</span><span class="token punctuation">(</span>prompt1<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    cache <span class="token operator">=</span> <span class="token keyword">await</span> get_cache<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token keyword">await</span> cache<span class="token punctuation">.</span>get<span class="token punctuation">(</span>prompt1<span class="token punctuation">)</span>
+
+<span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">set_response_to_cache</span><span class="token punctuation">(</span>prompt1<span class="token punctuation">,</span> response_data<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    cache <span class="token operator">=</span> <span class="token keyword">await</span> get_cache<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">await</span> cache<span class="token punctuation">.</span><span class="token builtin">set</span><span class="token punctuation">(</span>prompt1<span class="token punctuation">,</span> response_data<span class="token punctuation">,</span> ttl<span class="token operator">=</span><span class="token number">60</span><span class="token operator">*</span><span class="token number">60</span><span class="token punctuation">)</span>  <span class="token comment"># Cachear por 1 hora</span>
+
+<span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">fetch_response</span><span class="token punctuation">(</span>prompt1<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">with</span> st<span class="token punctuation">.</span>spinner<span class="token punctuation">(</span><span class="token string">"Procesando la pregunta..."</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        response <span class="token operator">=</span> requests<span class="token punctuation">.</span>post<span class="token punctuation">(</span><span class="token string">"http://localhost:8000/ask"</span><span class="token punctuation">,</span> json<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">"question"</span><span class="token punctuation">:</span> prompt1<span class="token punctuation">}</span><span class="token punctuation">)</span>
+        response_data <span class="token operator">=</span> response<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">await</span> set_response_to_cache<span class="token punctuation">(</span>prompt1<span class="token punctuation">,</span> response_data<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> response_data
+
+<span class="token comment"># Título de la aplicación</span>
+st<span class="token punctuation">.</span>title<span class="token punctuation">(</span><span class="token string">"Genetic Information Bot"</span><span class="token punctuation">)</span>
+
+st<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token triple-quoted-string string">"""
+    Este bot puede responder preguntas sobre información genética utilizando múltiples fuentes,
+    incluyendo web scraping, documentos PDF y búsquedas en Elasticsearch.
+"""</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Entrada de texto para la pregunta del usuario</span>
+question <span class="token operator">=</span> st<span class="token punctuation">.</span>text_input<span class="token punctuation">(</span><span class="token string">"Haz una pregunta sobre una enfermedad genética:"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Botón para obtener la respuesta</span>
+<span class="token keyword">if</span> st<span class="token punctuation">.</span>button<span class="token punctuation">(</span><span class="token string">"Obtener respuesta"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    response_data <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>run<span class="token punctuation">(</span>get_response_from_cache<span class="token punctuation">(</span>question<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token operator">not</span> response_data<span class="token punctuation">:</span>
+        response_data <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>run<span class="token punctuation">(</span>fetch_response<span class="token punctuation">(</span>question<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    
+    st<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token string">"Respuesta:"</span><span class="token punctuation">)</span>
+    <span class="token keyword">with</span> st<span class="token punctuation">.</span>spinner<span class="token punctuation">(</span><span class="token string">"Generando la respuesta..."</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        st<span class="token punctuation">.</span>write<span class="token punctuation">(</span>response_data<span class="token punctuation">[</span><span class="token string">'respuesta'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    st<span class="token punctuation">.</span>write<span class="token punctuation">(</span>f<span class="token string">"Tiempo de procesamiento: {response_data['tiempo_procesamiento']:.2f} segundos"</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">with</span> st<span class="token punctuation">.</span>expander<span class="token punctuation">(</span><span class="token string">"Detalles adicionales"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        st<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token string">"Contexto:"</span><span class="token punctuation">)</span>
+        <span class="token keyword">for</span> step <span class="token keyword">in</span> response_data<span class="token punctuation">[</span><span class="token string">"contexto"</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+            st<span class="token punctuation">.</span>write<span class="token punctuation">(</span>step<span class="token punctuation">)</span>
+
+    st<span class="token punctuation">.</span>success<span class="token punctuation">(</span><span class="token string">"¡Respuesta generada con éxito!"</span><span class="token punctuation">)</span>
+    st<span class="token punctuation">.</span>balloons<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Estos cambios reflejan una mejora significativa en la funcionalidad del bot, permitiéndole responder consultas sobre cualquier enfermedad genética de manera más precisa y eficiente al combinar múltiples fuentes de información y utilizar técnicas avanzadas de indexación y búsqueda.</p>
+</div>
+</body>
+
+</html>

@@ -1,8 +1,7 @@
 langchain>=0.2.0,<0.3.0
-langchain-community>=0.2.0
+langchain-community==0.2.0
 python-dotenv
 streamlit
-bs4
 beautifulsoup4
 pypdf
 faiss-cpu
@@ -17,3 +16,4 @@ transformers
 sentence-transformers
 requests
 aiocache
+elasticsearch

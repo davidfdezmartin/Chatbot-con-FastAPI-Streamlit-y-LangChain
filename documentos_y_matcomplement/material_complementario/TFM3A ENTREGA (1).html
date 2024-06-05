@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TFM3A ENTREGA</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h3 id="nuevas-funcionalidades-del-bot-de-consulta-genética-multifuente">Nuevas Funcionalidades del Bot de Consulta Genética Multifuente</h3>
+<p>En la fase más reciente del desarrollo del bot, se han implementado mejoras significativas que amplían su capacidad para responder consultas genéticas sobre cualquier enfermedad. Estas mejoras han sido posibles mediante la integración de múltiples fuentes de información y la utilización de varias tecnologías y técnicas avanzadas, las cuales se detallan a continuación.</p>
+<h4 id="integración-de-web-scraping">Integración de Web Scraping</h4>
+<p><strong>Web Scraping con BeautifulSoup</strong><br>
+Se ha implementado una función de web scraping que utiliza la librería BeautifulSoup para extraer información de sitios web especializados como Mayo Clinic. BeautifulSoup es una herramienta poderosa que facilita la navegación y extracción de datos de documentos HTML y XML. Esta funcionalidad permite al bot acceder a información actualizada y detallada sobre diversas enfermedades directamente desde fuentes reconocidas.</p>
+<p>La función de web scraping opera de la siguiente manera:</p>
+<ol>
+<li><strong>Traducción de la Consulta</strong>: Utilizando una función de traducción para convertir el nombre de la enfermedad al inglés, aseguramos que la búsqueda sea efectiva en sitios web principalmente en inglés.</li>
+<li><strong>Búsqueda en Mayo Clinic</strong>: Se construye una URL de búsqueda y se envía una solicitud HTTP para obtener la página de resultados.</li>
+<li><strong>Extracción de Datos</strong>: Se identifica y sigue el enlace más relevante desde los resultados de búsqueda para acceder a la página de la enfermedad específica. Luego, se extrae el contenido relevante utilizando BeautifulSoup para procesar el HTML.</li>
+</ol>
+<p>El siguiente código muestra cómo se implementa esta funcionalidad:</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">import</span> requests
+<span class="token keyword">from</span> bs4 <span class="token keyword">import</span> BeautifulSoup
+
+<span class="token keyword">def</span> <span class="token function">scrape_mayo_clinic</span><span class="token punctuation">(</span>disease<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    disease_english <span class="token operator">=</span> translate_to_english<span class="token punctuation">(</span>disease<span class="token punctuation">)</span>
+    search_url <span class="token operator">=</span> f<span class="token string">"https://www.mayoclinic.org/search/search-results?q={disease_english}"</span>
+    response <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>search_url<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> response<span class="token punctuation">.</span>status_code <span class="token operator">==</span> <span class="token number">200</span><span class="token punctuation">:</span>
+        soup <span class="token operator">=</span> BeautifulSoup<span class="token punctuation">(</span>response<span class="token punctuation">.</span>text<span class="token punctuation">,</span> <span class="token string">'html.parser'</span><span class="token punctuation">)</span>
+        link <span class="token operator">=</span> soup<span class="token punctuation">.</span>find<span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'search-results-link'</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> link<span class="token punctuation">:</span>
+            page_url <span class="token operator">=</span> <span class="token string">"https://www.mayoclinic.org"</span> <span class="token operator">+</span> link<span class="token punctuation">[</span><span class="token string">'href'</span><span class="token punctuation">]</span>
+            page_response <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>page_url<span class="token punctuation">)</span>
+            <span class="token keyword">if</span> page_response<span class="token punctuation">.</span>status_code <span class="token operator">==</span> <span class="token number">200</span><span class="token punctuation">:</span>
+                page_soup <span class="token operator">=</span> BeautifulSoup<span class="token punctuation">(</span>page_response<span class="token punctuation">.</span>text<span class="token punctuation">,</span> <span class="token string">'html.parser'</span><span class="token punctuation">)</span>
+                content <span class="token operator">=</span> page_soup<span class="token punctuation">.</span>find<span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'content'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>text
+                <span class="token keyword">return</span> content
+    <span class="token keyword">return</span> <span class="token string">"No information available from Mayo Clinic."</span>
+</code></pre>
+<h4 id="extracción-de-información-de-pdfs">Extracción de Información de PDFs</h4>
+<p><strong>Lectura de PDFs con PyMuPDF</strong><br>
+Para asegurar que el bot pueda acceder a información contenida en documentos PDF, se ha integrado la librería PyMuPDF. Esta librería permite extraer texto de archivos PDF, lo cual es crucial para obtener datos de documentos científicos y médicos almacenados localmente.</p>
+<p>La función de lectura de PDFs opera de la siguiente manera:</p>
+<ol>
+<li><strong>Exploración de Directorio</strong>: Se navega por el directorio que contiene los archivos PDF.</li>
+<li><strong>Extracción de Texto</strong>: Para cada archivo PDF, se abre el documento y se extrae el texto de cada página.</li>
+<li><strong>Filtrado de Información</strong>: Se verifica si el texto extraído contiene menciones a la enfermedad específica, asegurando que solo se devuelva información relevante.</li>
+</ol>
+<p>El siguiente código muestra cómo se implementa esta funcionalidad:</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">import</span> fitz  <span class="token comment"># PyMuPDF</span>
+
+<span class="token keyword">def</span> <span class="token function">read_pdfs</span><span class="token punctuation">(</span>disease<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">import</span> os
+    pdf_directory <span class="token operator">=</span> <span class="token string">'data/'</span>
+    disease_english <span class="token operator">=</span> translate_to_english<span class="token punctuation">(</span>disease<span class="token punctuation">)</span>
+    extracted_text <span class="token operator">=</span> <span class="token string">""</span>
+    
+    <span class="token keyword">for</span> filename <span class="token keyword">in</span> os<span class="token punctuation">.</span>listdir<span class="token punctuation">(</span>pdf_directory<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> filename<span class="token punctuation">.</span>endswith<span class="token punctuation">(</span><span class="token string">".pdf"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            doc <span class="token operator">=</span> fitz<span class="token punctuation">.</span><span class="token builtin">open</span><span class="token punctuation">(</span>os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>join<span class="token punctuation">(</span>pdf_directory<span class="token punctuation">,</span> filename<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token keyword">for</span> page_num <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                page <span class="token operator">=</span> doc<span class="token punctuation">.</span>load_page<span class="token punctuation">(</span>page_num<span class="token punctuation">)</span>
+                extracted_text <span class="token operator">+=</span> page<span class="token punctuation">.</span>get_text<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    
+    <span class="token keyword">if</span> disease_english<span class="token punctuation">.</span>lower<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">in</span> extracted_text<span class="token punctuation">.</span>lower<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> extracted_text
+    <span class="token keyword">return</span> <span class="token string">"No relevant information found in PDFs."</span>
+</code></pre>
+<h4 id="integración-con-elasticsearch">Integración con Elasticsearch</h4>
+<p><strong>Búsqueda y Almacenamiento en Elasticsearch</strong><br>
+El bot utiliza Elasticsearch para almacenar y buscar información genética detallada. Elasticsearch es un motor de búsqueda y análisis distribuido, capaz de gestionar grandes volúmenes de datos y realizar búsquedas en tiempo real con alta eficiencia.</p>
+<p>La integración con Elasticsearch incluye los siguientes pasos:</p>
+<ol>
+<li><strong>Configuración y Conexión</strong>: Se configura Elasticsearch con las credenciales necesarias y se verifica la conexión.</li>
+<li><strong>Carga de Datos</strong>: Los datos obtenidos de la API de ClinVar y otros recursos se indexan en Elasticsearch.</li>
+<li><strong>Búsqueda</strong>: Se realiza una búsqueda en Elasticsearch para obtener información relevante sobre la enfermedad consultada.</li>
+</ol>
+<p>El siguiente código muestra cómo se realiza la búsqueda y carga de datos en Elasticsearch:</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> elasticsearch <span class="token keyword">import</span> Elasticsearch<span class="token punctuation">,</span> helpers
+<span class="token keyword">import</span> json
+
+<span class="token keyword">def</span> <span class="token function">load_data_to_es</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> index_name<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    actions <span class="token operator">=</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+            <span class="token string">"_index"</span><span class="token punctuation">:</span> index_name<span class="token punctuation">,</span>
+            <span class="token string">"_source"</span><span class="token punctuation">:</span> item
+        <span class="token punctuation">}</span>
+        <span class="token keyword">for</span> item <span class="token keyword">in</span> data
+    <span class="token punctuation">]</span>
+    helpers<span class="token punctuation">.</span>bulk<span class="token punctuation">(</span>es<span class="token punctuation">,</span> actions<span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">search_data_in_es</span><span class="token punctuation">(</span>index_name<span class="token punctuation">,</span> query<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    search_query <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token string">"query"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+            <span class="token string">"match"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                <span class="token string">"disease"</span><span class="token punctuation">:</span> query
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    response <span class="token operator">=</span> es<span class="token punctuation">.</span>search<span class="token punctuation">(</span>index<span class="token operator">=</span>index_name<span class="token punctuation">,</span> body<span class="token operator">=</span>search_query<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> response<span class="token punctuation">[</span><span class="token string">'hits'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'hits'</span><span class="token punctuation">]</span>
+</code></pre>
+<h3 id="generación-de-respuesta-combinada">Generación de Respuesta Combinada</h3>
+<p>Finalmente, se ha implementado una función que combina la información de todas las fuentes y genera una respuesta detallada. Esta función busca en Elasticsearch, realiza web scraping y lee documentos PDF para consolidar toda la información relevante.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">generate_response</span><span class="token punctuation">(</span>disease<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># Buscar en Elasticsearch</span>
+    es_results <span class="token operator">=</span> search_data_in_es<span class="token punctuation">(</span>index_name<span class="token punctuation">,</span> disease<span class="token punctuation">)</span>
+    
+    <span class="token comment"># Realizar web scraping</span>
+    mayo_clinic_info <span class="token operator">=</span> scrape_mayo_clinic<span class="token punctuation">(</span>disease<span class="token punctuation">)</span>
+    
+    <span class="token comment"># Leer información de PDFs</span>
+    pdf_info <span class="token operator">=</span> read_pdfs<span class="token punctuation">(</span>disease<span class="token punctuation">)</span>
+    
+    <span class="token comment"># Generar respuesta combinada</span>
+    combined_info <span class="token operator">=</span> f<span class="token string">"Información de Elasticsearch:\n"</span>
+    <span class="token keyword">for</span> result <span class="token keyword">in</span> es_results<span class="token punctuation">:</span>
+        data <span class="token operator">=</span> result<span class="token punctuation">[</span><span class="token string">'_source'</span><span class="token punctuation">]</span>
+        combined_info <span class="token operator">+=</span> f<span class="token string">"Gene: {data['gene']}, Mutation: {data['mutation']}, Description: {data['description']}\n"</span>
+    
+    combined_info <span class="token operator">+=</span> f<span class="token string">"\nInformación de Mayo Clinic:\n{mayo_clinic_info}\n"</span>
+    combined_info <span class="token operator">+=</span> f<span class="token string">"\nInformación de PDFs:\n{pdf_info}\n"</span>
+    
+    <span class="token keyword">return</span> combined_info
+
+<span class="token comment"># Proceso principal para buscar una enfermedad y cargar los datos</span>
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+    disease <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token string">"Ingrese el nombre de la enfermedad: "</span><span class="token punctuation">)</span>
+    response <span class="token operator">=</span> generate_response<span class="token punctuation">(</span>disease<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+</code></pre>
+<h3 id="conclusión">Conclusión</h3>
+<p>Con estas mejoras, el bot ha mejorado significativamente en su capacidad para manejar consultas sobre cualquier enfermedad genética. La integración de múltiples fuentes de información (Elasticsearch, web scraping, y PDFs) asegura que el bot proporcione respuestas completas y precisas. Esto no solo amplía la funcionalidad del bot, sino que también mejora su utilidad como herramienta para usuarios que buscan información genética detallada y actualizada.</p>
+<p>Estos cambios refuerzan la capacidad del bot para servir como una fuente confiable de información genética, integrando datos de múltiples canales y asegurando que las respuestas sean lo más completas y relevantes posible.</p>
+<h2 id="mejoras-de-streamlit_app_py">Mejoras de streamlit_app_py</h2>
+<p>Para mejorar el código de <code>streamlit_app.py</code> integrando todas las funcionalidades y asegurando una correcta gestión del caché, aquí tienes la versión actualizada con explicaciones adicionales:</p>
+<h3 id="streamlit_app.py"><code>streamlit_app.py</code></h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">import</span> streamlit <span class="token keyword">as</span> st
+<span class="token keyword">import</span> requests
+<span class="token keyword">import</span> aioredis
+<span class="token keyword">import</span> asyncio
+<span class="token keyword">from</span> aiocache <span class="token keyword">import</span> Cache
+<span class="token keyword">from</span> aiocache<span class="token punctuation">.</span>serializers <span class="token keyword">import</span> JsonSerializer
+
+<span class="token comment"># Configuración inicial de aiocache para usar Redis</span>
+<span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">get_cache</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    redis <span class="token operator">=</span> <span class="token keyword">await</span> aioredis<span class="token punctuation">.</span>create_redis_pool<span class="token punctuation">(</span><span class="token string">"redis://localhost:6379"</span><span class="token punctuation">)</span>
+    cache <span class="token operator">=</span> Cache<span class="token punctuation">(</span>Cache<span class="token punctuation">.</span>REDIS<span class="token punctuation">,</span> endpoint<span class="token operator">=</span><span class="token string">"localhost"</span><span class="token punctuation">,</span> port<span class="token operator">=</span><span class="token number">6379</span><span class="token punctuation">,</span> namespace<span class="token operator">=</span><span class="token string">"main"</span><span class="token punctuation">,</span> redis<span class="token operator">=</span>redis<span class="token punctuation">,</span> serializer<span class="token operator">=</span>JsonSerializer<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> cache
+
+<span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">get_response_from_cache</span><span class="token punctuation">(</span>prompt1<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    cache <span class="token operator">=</span> <span class="token keyword">await</span> get_cache<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token keyword">await</span> cache<span class="token punctuation">.</span>get<span class="token punctuation">(</span>prompt1<span class="token punctuation">)</span>
+
+<span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">set_response_to_cache</span><span class="token punctuation">(</span>prompt1<span class="token punctuation">,</span> response_data<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    cache <span class="token operator">=</span> <span class="token keyword">await</span> get_cache<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">await</span> cache<span class="token punctuation">.</span><span class="token builtin">set</span><span class="token punctuation">(</span>prompt1<span class="token punctuation">,</span> response_data<span class="token punctuation">,</span> ttl<span class="token operator">=</span><span class="token number">60</span><span class="token operator">*</span><span class="token number">60</span><span class="token punctuation">)</span>  <span class="token comment"># Cachear por 1 hora</span>
+
+<span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">fetch_response</span><span class="token punctuation">(</span>prompt1<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">with</span> st<span class="token punctuation">.</span>spinner<span class="token punctuation">(</span><span class="token string">"Procesando la pregunta..."</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        response <span class="token operator">=</span> requests<span class="token punctuation">.</span>post<span class="token punctuation">(</span><span class="token string">"http://localhost:8000/ask"</span><span class="token punctuation">,</span> json<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">"question"</span><span class="token punctuation">:</span> prompt1<span class="token punctuation">}</span><span class="token punctuation">)</span>
+        response_data <span class="token operator">=</span> response<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">await</span> set_response_to_cache<span class="token punctuation">(</span>prompt1<span class="token punctuation">,</span> response_data<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> response_data
+
+<span class="token comment"># Título de la aplicación</span>
+st<span class="token punctuation">.</span>title<span class="token punctuation">(</span><span class="token string">"Demostración de Chatgroq con Llama3"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Entrada de texto para la pregunta del usuario</span>
+prompt1 <span class="token operator">=</span> st<span class="token punctuation">.</span>text_input<span class="token punctuation">(</span><span class="token string">"Ingrese su pregunta sobre los documentos (en español)"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Botón para obtener la respuesta</span>
+<span class="token keyword">if</span> st<span class="token punctuation">.</span>button<span class="token punctuation">(</span><span class="token string">"Obtener respuesta"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    response_data <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>run<span class="token punctuation">(</span>get_response_from_cache<span class="token punctuation">(</span>prompt1<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token operator">not</span> response_data<span class="token punctuation">:</span>
+        response_data <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>run<span class="token punctuation">(</span>fetch_response<span class="token punctuation">(</span>prompt1<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    
+    st<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token string">"Respuesta:"</span><span class="token punctuation">)</span>
+    <span class="token keyword">with</span> st<span class="token punctuation">.</span>spinner<span class="token punctuation">(</span><span class="token string">"Generando la respuesta..."</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        st<span class="token punctuation">.</span>write<span class="token punctuation">(</span>response_data<span class="token punctuation">[</span><span class="token string">'respuesta'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    st<span class="token punctuation">.</span>write<span class="token punctuation">(</span>f<span class="token string">"Tiempo de procesamiento: {response_data['tiempo_procesamiento']:.2f} segundos"</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">with</span> st<span class="token punctuation">.</span>expander<span class="token punctuation">(</span><span class="token string">"Detalles adicionales"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        st<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token string">"Contexto:"</span><span class="token punctuation">)</span>
+        <span class="token keyword">for</span> step <span class="token keyword">in</span> response_data<span class="token punctuation">[</span><span class="token string">"contexto"</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+            st<span class="token punctuation">.</span>write<span class="token punctuation">(</span>step<span class="token punctuation">)</span>
+
+    st<span class="token punctuation">.</span>success<span class="token punctuation">(</span><span class="token string">"¡Respuesta generada con éxito!"</span><span class="token punctuation">)</span>
+    st<span class="token punctuation">.</span>balloons<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="explicaciones-adicionales">Explicaciones adicionales:</h3>
+<ol>
+<li>
+<p><strong>Manejo de Caché Asíncrono</strong>:</p>
+<ul>
+<li><code>get_cache</code>: Configura y devuelve una instancia del caché utilizando <code>aioredis</code> y <code>aiocache</code>.</li>
+<li><code>get_response_from_cache</code>: Intenta recuperar la respuesta del caché para la pregunta proporcionada.</li>
+<li><code>set_response_to_cache</code>: Almacena la respuesta en el caché con una duración de una hora.</li>
+</ul>
+</li>
+<li>
+<p><strong>Solicitud HTTP y Almacenamiento en Caché</strong>:</p>
+<ul>
+<li><code>fetch_response</code>: Realiza una solicitud HTTP al servidor FastAPI para obtener la respuesta a la pregunta y luego la almacena en el caché.</li>
+</ul>
+</li>
+<li>
+<p><strong>Integración con Streamlit</strong>:</p>
+<ul>
+<li><code>prompt1</code>: Campo de entrada de texto para que el usuario ingrese su pregunta.</li>
+<li><code>st.button("Obtener respuesta")</code>: Botón que, al hacer clic, desencadena el flujo de obtención de respuesta.</li>
+<li><code>asyncio.run(get_response_from_cache(prompt1))</code>: Verifica si la respuesta ya está en el caché. Si no es así, llama a <code>fetch_response</code> para obtenerla y almacenarla.</li>
+<li><code>st.write("Respuesta:")</code>: Muestra la respuesta obtenida, el tiempo de procesamiento y detalles adicionales.</li>
+</ul>
+</li>
+</ol>
+<h3 id="mejoras">Mejoras:</h3>
+<ul>
+<li><strong>Gestión de Caché</strong>: Mejora la eficiencia al reducir el tiempo de respuesta para preguntas repetidas mediante el uso de caché con Redis.</li>
+<li><strong>Interfaz de Usuario</strong>: Proporciona una interfaz limpia y fácil de usar para los usuarios mediante Streamlit.</li>
+<li><strong>Flujo Asíncrono</strong>: Utiliza funciones asíncronas para manejar operaciones de caché, mejorando la escalabilidad y el rendimiento.</li>
+</ul>
+<p>Con estas actualizaciones, el bot es capaz de manejar consultas sobre cualquier enfermedad genética, combinando información obtenida de diversas fuentes especializadas y documentos locales, mejorando significativamente la precisión y utilidad de las respuestas proporcionadas.</p>
+</div>
+</body>
+
+</html>
