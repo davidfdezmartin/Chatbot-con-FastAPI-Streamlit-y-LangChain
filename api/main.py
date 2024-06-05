@@ -30,13 +30,35 @@ PDF_DIRECTORY_PATH = os.getenv("PDF_DIRECTORY_PATH")
 HUGGING_FACE_API_TOKEN = os.getenv('HUGGING_FACE_API_TOKEN')
 
 if not GROQ_API_KEY:
-    raise ValueError("No se ha configurado la clave API de GROQ en las variables de entorno.")
+    raise ValueError(
+        "No se ha configurado la clave API de GROQ en las variables de entorno.")
 if not PDF_DIRECTORY_PATH:
-    raise ValueError("No se ha configurado el directorio de PDFs en las variables de entorno.")
+    raise ValueError(
+        "No se ha configurado el directorio de PDFs en las variables de entorno.")
 if not HUGGING_FACE_API_TOKEN:
-    raise ValueError("No se ha configurado el token API de Hugging Face en las variables de entorno.")
+    raise ValueError(
+        "No se ha configurado el token API de Hugging Face en las variables de entorno.")
 
-json_path = './data/clinica_mayo.json'
+# Función para cargar y dividir documentos PDF
+def load_and_split_pdf(pdf_path):
+    pdf_loader = PyPDFDirectoryLoader(pdf_path)
+    docs = pdf_loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    final_documents = text_splitter.split_documents(docs)
+    return final_documents
+
+# Función para vectorizar documentos y almacenarlos
+def vectorize_and_store(documents):
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    vectors = FAISS.from_documents(documents, embeddings)
+    return vectors
+
+@lru_cache
+def load_documents_and_vectors():
+    pdf_path = "./data/medical_book.pdf"
+    documents = load_and_split_pdf(pdf_path)
+    vectors = vectorize_and_store(documents)
+    return vectors
 
 @lru_cache
 def get_general_model():
@@ -63,20 +85,19 @@ Respuesta útil:
 prompt = ChatPromptTemplate.from_template(prompt_template)
 
 def is_medical_question(question):
-    medical_keywords = ["diabetes", "cáncer", "hipertensión", "enfermedad", "síntoma", "tratamiento", "medicina"]
+    medical_keywords = ["diabetes", "cáncer", "hipertensión",
+                        "enfermedad", "síntoma", "tratamiento", "medicina"]
     return any(keyword in question.lower() for keyword in medical_keywords)
 
 @app.on_event("startup")
 async def startup_event():
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    docs = await load_documents()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    final_documents = text_splitter.split_documents(docs)
-    vectors = FAISS.from_documents(final_documents, embeddings)
+    vectors = load_documents_and_vectors()
     app.state.vectors = vectors
 
     user_agent = 'MyApp/1.0 (example@example.com)'
-    wikipedia_api_wrapper = WikipediaAPIWrapper(language='es', top_k_results=1, doc_content_chars_max=200, user_agent=user_agent)
+    wikipedia_api_wrapper = WikipediaAPIWrapper(
+        language='es', top_k_results=1, doc_content_chars_max=200, user_agent=user_agent)
     app.state.wikipedia_tool = WikipediaQueryRun(api_wrapper=wikipedia_api_wrapper)
 
     arxiv_api_wrapper = ArxivAPIWrapper(top_k_results=1, doc_content_chars_max=200)
@@ -108,7 +129,6 @@ async def ask_question(request: Request):
         response = cached_response
     else:
         response = agent.invoke({'input': question_en})
-        # Cache the response for 1 hour
         await cache.set(question_en, response, ttl=3600)
 
     response_es = translator.translate(response['output'], dest='es').text
@@ -128,21 +148,11 @@ async def gene_diseases(disease_id: str):
     data = get_gene_associated_diseases(disease_id)
     return data
 
-@cache.cached(ttl=3600)  # Cache the function for 1 hour
+@cache.cached(ttl=3600)
 async def load_documents():
     try:
         pdf_loader = PyPDFDirectoryLoader(PDF_DIRECTORY_PATH)
-        documents = pdf_loader.load()
-        
-        # Cargar datos del archivo JSON
-        with open(json_path, 'r') as file:
-            mayo_clinic_data = json.load(file)
-        
-        # Combinar los documentos de PDF con los datos del archivo JSON
-        for entry in mayo_clinic_data:
-            documents.append(entry)
-        
-        return documents
+        return pdf_loader.load()
     except Exception as e:
         print(f"Error cargando documentos: {e}")
         return []

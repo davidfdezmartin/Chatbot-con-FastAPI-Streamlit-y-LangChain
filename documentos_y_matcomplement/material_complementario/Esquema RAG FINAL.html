@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Diagrama de Decisión - Sistema RAG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.2.0/mermaid.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.2.0/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+</head>
+<body>
+    <div class="mermaid">
+        graph TD
+        A[Inicio: Usuario accede a la aplicación Streamlit] --> B[Usuario ingresa pregunta en español]
+        B --> C[Pregunta enviada a la API FastAPI]
+        C --> D[Traducción de la pregunta al inglés usando Google Translate]
+        D --> E[Agente personalizado recibe la pregunta traducida]
+        E --> F{Tipo de pregunta}
+        F --> |Pregunta general| G[Búsqueda en Wikipedia]
+        F --> |Pregunta médica específica| H[Proceso de búsqueda de información]
+        G --> J[Compilación de resultados de Wikipedia]
+        H --> K[Consulta en documentos PDF, Web Scraping y API de ClinVar]
+        K --> L[Compilación de resultados médicos]
+        J --> M[Generación de respuesta en inglés utilizando el modelo LLM]
+        L --> M
+        M --> N[Traducción de la respuesta al español usando Google Translate]
+        N --> O[Respuesta traducida al español devuelta a la interfaz de usuario de Streamlit]
+        O --> P[Respuesta en español mostrada al usuario]
+        P --> Q[Expansión: Detalles adicionales y contexto utilizado]
+
+        subgraph H[Proceso de búsqueda de información]
+            H1[Búsqueda en documentos PDF]
+            H2[Web Scraping de la Clínica Mayo]
+            H3[Consulta en la API de ClinVar]
+        end
+    </div>
+</body>
+</html>

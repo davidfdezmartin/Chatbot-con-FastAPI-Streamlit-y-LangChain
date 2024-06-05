@@ -1,58 +1,91 @@
 import os
-from bs4 import BeautifulSoup
-import requests
 import json
+from langchain.agents import initialize_agent, Tool
+from langchain_community.tools import WikipediaQueryRun, ArxivQueryRun
+from langchain_community.utilities import WikipediaAPIWrapper, ArxivAPIWrapper
+from langchain.prompts import ChatPromptTemplate
+from langchain_community.document_loaders import PyPDFDirectoryLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from elasticsearch import Elasticsearch, helpers
+import requests
+from bs4 import BeautifulSoup
+from googletrans import Translator
 
-# Función para obtener datos de la Clínica Mayo
-def scrape_mayo_clinic(disease_name):
-    url = f"https://www.mayoclinic.org/diseases-conditions/{disease_name.replace(' ', '-').lower()}/symptoms-causes/syc-20355852"
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, 'html.parser')
-        description_tag = soup.find('div', class_='content')
-        description = description_tag.text.strip() if description_tag else "No description available."
-        
-        gene_tags = soup.find_all('a', href=True)
-        genes = [tag.text.strip() for tag in gene_tags if '/tests-procedures' in tag['href']]
-        
-        return {
-            "disease": disease_name,
-            "description": description,
-            "genes": genes
-        }
-    else:
-        return {
-            "disease": disease_name,
-            "description": "No description available.",
-            "genes": []
-        }
-
-# Función para cargar datos a Elasticsearch
-def load_data_to_es(data, index_name, es):
-    actions = [
-        {
-            "_index": index_name,
-            "_source": item
-        }
-        for item in data
-    ]
-    helpers.bulk(es, actions)
-
-# Guardar datos en un archivo JSON
-def save_to_json(data, json_path):
-    with open(json_path, 'w') as file:
-        json.dump(data, file)
-
-# Cargar datos desde un archivo JSON
-def load_from_json(json_path):
-    with open(json_path, 'r') as file:
-        return json.load(file)
-
-# Definir la ruta del archivo JSON
+# Definición de la ruta del archivo JSON
 json_path = './data/clinica_mayo.json'
 
-# Obtener datos de la Clínica Mayo y guardarlos en el archivo JSON
-disease_name = "Cystic Fibrosis"
-mayo_data = scrape_mayo_clinic(disease_name)
-save_to_json([mayo_data], json_path)
+# Función para guardar datos en la ruta definida
+def save_clinica_mayo_data(data):
+    with open(json_path, 'w') as f:
+        json.dump(data, f)
+
+# Función para cargar datos desde la ruta definida
+def load_clinica_mayo_data():
+    if os.path.exists(json_path):
+        with open(json_path, 'r') as f:
+            return json.load(f)
+    return []
+
+# Función para realizar web scraping en Mayo Clinic
+def fetch_clinica_mayo_data(disease):
+    url = f"https://www.mayoclinic.org/diseases-conditions/{disease}/symptoms-causes/syc-20355880"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        description_tag = soup.find('div', {'class': 'content'})
+        if description_tag:
+            description = description_tag.get_text().strip()
+            data = load_clinica_mayo_data()
+            data.append({
+                "disease": disease,
+                "source": "Mayo Clinic",
+                "description": description
+            })
+            save_clinica_mayo_data(data)
+            return description
+    return "No se encontró información en Mayo Clinic."
+
+# Función para crear el agente con herramientas personalizadas
+def create_custom_tools_agent(model, tools, prompt):
+    return initialize_agent(
+        tools=tools,
+        llm=model,
+        agent_type="chat-conversational-react-description",
+        prompt_template=prompt
+    )
+
+# Definir las herramientas personalizadas
+def get_custom_tools():
+    user_agent = 'MyApp/1.0 (example@example.com)'
+    wikipedia_api_wrapper = WikipediaAPIWrapper(
+        language='es', top_k_results=1, doc_content_chars_max=200, user_agent=user_agent)
+    wikipedia_tool = WikipediaQueryRun(api_wrapper=wikipedia_api_wrapper)
+
+    arxiv_api_wrapper = ArxivAPIWrapper(
+        top_k_results=1, doc_content_chars_max=200)
+    arxiv_tool = ArxivQueryRun(api_wrapper=arxiv_api_wrapper)
+
+    clinica_mayo_tool = Tool(
+        name="Mayo Clinic",
+        func=lambda q: fetch_clinica_mayo_data(q.replace(" ", "-").lower()),
+        description="Busca información sobre enfermedades en el sitio web de Mayo Clinic."
+    )
+
+    return [wikipedia_tool, arxiv_tool, clinica_mayo_tool]
+
+# Función para procesar la consulta del usuario y devolver la respuesta adecuada
+def process_query(model, query, prompt):
+    tools = get_custom_tools()
+    agent = create_custom_tools_agent(model, tools, prompt)
+
+    # Traducir la pregunta al inglés si es necesario
+    translator = Translator()
+    query_en = translator.translate(query, dest='en').text
+
+    # Ejecutar la consulta utilizando el agente
+    response = agent.invoke({'input': query_en})
+
+    # Traducir la respuesta de vuelta al español si es necesario
+    response_es = translator.translate(response['output'], dest='es').text
+
+    return response_es

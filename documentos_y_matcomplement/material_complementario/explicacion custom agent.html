@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>explicacion custom agent</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><p>Aquí está el código actualizado para <code>custom_agent.py</code>, y a continuación explico los cambios realizados:</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">import</span> os
+<span class="token keyword">from</span> bs4 <span class="token keyword">import</span> BeautifulSoup
+<span class="token keyword">import</span> requests
+<span class="token keyword">import</span> json
+<span class="token keyword">from</span> elasticsearch <span class="token keyword">import</span> helpers
+
+<span class="token comment"># Función para obtener datos de la Clínica Mayo</span>
+<span class="token keyword">def</span> <span class="token function">scrape_mayo_clinic</span><span class="token punctuation">(</span>disease_name<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    url <span class="token operator">=</span> f<span class="token string">"https://www.mayoclinic.org/diseases-conditions/{disease_name.replace(' ', '-').lower()}/symptoms-causes/syc-20355852"</span>
+    response <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>url<span class="token punctuation">)</span>
+    
+    <span class="token keyword">if</span> response<span class="token punctuation">.</span>status_code <span class="token operator">==</span> <span class="token number">200</span><span class="token punctuation">:</span>
+        soup <span class="token operator">=</span> BeautifulSoup<span class="token punctuation">(</span>response<span class="token punctuation">.</span>content<span class="token punctuation">,</span> <span class="token string">'html.parser'</span><span class="token punctuation">)</span>
+        description_tag <span class="token operator">=</span> soup<span class="token punctuation">.</span>find<span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'content'</span><span class="token punctuation">)</span>
+        description <span class="token operator">=</span> description_tag<span class="token punctuation">.</span>text<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">if</span> description_tag <span class="token keyword">else</span> <span class="token string">"No description available."</span>
+        
+        gene_tags <span class="token operator">=</span> soup<span class="token punctuation">.</span>find_all<span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">,</span> href<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+        genes <span class="token operator">=</span> <span class="token punctuation">[</span>tag<span class="token punctuation">.</span>text<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">for</span> tag <span class="token keyword">in</span> gene_tags <span class="token keyword">if</span> <span class="token string">'/tests-procedures'</span> <span class="token keyword">in</span> tag<span class="token punctuation">[</span><span class="token string">'href'</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+        
+        <span class="token keyword">return</span> <span class="token punctuation">{</span>
+            <span class="token string">"disease"</span><span class="token punctuation">:</span> disease_name<span class="token punctuation">,</span>
+            <span class="token string">"description"</span><span class="token punctuation">:</span> description<span class="token punctuation">,</span>
+            <span class="token string">"genes"</span><span class="token punctuation">:</span> genes
+        <span class="token punctuation">}</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token punctuation">{</span>
+            <span class="token string">"disease"</span><span class="token punctuation">:</span> disease_name<span class="token punctuation">,</span>
+            <span class="token string">"description"</span><span class="token punctuation">:</span> <span class="token string">"No description available."</span><span class="token punctuation">,</span>
+            <span class="token string">"genes"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+
+<span class="token comment"># Función para cargar datos a Elasticsearch</span>
+<span class="token keyword">def</span> <span class="token function">load_data_to_es</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> index_name<span class="token punctuation">,</span> es<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    actions <span class="token operator">=</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+            <span class="token string">"_index"</span><span class="token punctuation">:</span> index_name<span class="token punctuation">,</span>
+            <span class="token string">"_source"</span><span class="token punctuation">:</span> item
+        <span class="token punctuation">}</span>
+        <span class="token keyword">for</span> item <span class="token keyword">in</span> data
+    <span class="token punctuation">]</span>
+    helpers<span class="token punctuation">.</span>bulk<span class="token punctuation">(</span>es<span class="token punctuation">,</span> actions<span class="token punctuation">)</span>
+
+<span class="token comment"># Guardar datos en un archivo JSON</span>
+<span class="token keyword">def</span> <span class="token function">save_to_json</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> json_path<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span>json_path<span class="token punctuation">,</span> <span class="token string">'w'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token builtin">file</span><span class="token punctuation">:</span>
+        json<span class="token punctuation">.</span>dump<span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token builtin">file</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Cargar datos desde un archivo JSON</span>
+<span class="token keyword">def</span> <span class="token function">load_from_json</span><span class="token punctuation">(</span>json_path<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span>json_path<span class="token punctuation">,</span> <span class="token string">'r'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token builtin">file</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> json<span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token builtin">file</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Definir la ruta del archivo JSON</span>
+json_path <span class="token operator">=</span> <span class="token string">'./data/clinica_mayo.json'</span>
+
+<span class="token comment"># Crear un agente personalizado con herramientas específicas</span>
+<span class="token keyword">def</span> <span class="token function">create_custom_tools_agent</span><span class="token punctuation">(</span>model<span class="token punctuation">,</span> tools<span class="token punctuation">,</span> prompt<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    agent <span class="token operator">=</span> model<span class="token punctuation">.</span>agent<span class="token punctuation">(</span>tools<span class="token punctuation">,</span> prompt<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> agent
+
+<span class="token comment"># Función para consultar datos en la API de ClinVar</span>
+<span class="token keyword">def</span> <span class="token function">fetch_clinvar_data</span><span class="token punctuation">(</span>disease<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    url <span class="token operator">=</span> f<span class="token string">"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=clinvar&amp;term={disease}&amp;retmode=json"</span>
+    response <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>url<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> response<span class="token punctuation">.</span>status_code <span class="token operator">==</span> <span class="token number">200</span><span class="token punctuation">:</span>
+        result <span class="token operator">=</span> response<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        ids <span class="token operator">=</span> result<span class="token punctuation">[</span><span class="token string">"esearchresult"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"idlist"</span><span class="token punctuation">]</span>
+        details_url <span class="token operator">=</span> f<span class="token string">"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=clinvar&amp;id={','.join(ids)}&amp;retmode=json"</span>
+        details_response <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>details_url<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> details_response<span class="token punctuation">.</span>status_code <span class="token operator">==</span> <span class="token number">200</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> details_response<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token boolean">None</span>
+</code></pre>
+<h3 id="cambios-realizados">Cambios Realizados:</h3>
+<ol>
+<li>
+<p><strong>Función <code>scrape_mayo_clinic</code></strong>:</p>
+<ul>
+<li>Esta función realiza web scraping en la página de la Clínica Mayo para obtener información sobre una enfermedad específica. Se construye la URL de la página de la enfermedad, se obtiene el contenido HTML y se extrae la descripción de la enfermedad y los genes relacionados.</li>
+<li>Se añade una lógica para manejar casos donde la página no tenga una descripción disponible.</li>
+</ul>
+</li>
+<li>
+<p><strong>Funciones para Manejo de JSON</strong>:</p>
+<ul>
+<li><code>save_to_json</code>: Esta función guarda los datos obtenidos de la Clínica Mayo en un archivo JSON en el directorio <code>./data/clinica_mayo.json</code>.</li>
+<li><code>load_from_json</code>: Esta función carga datos desde el archivo JSON ubicado en el directorio <code>./data/clinica_mayo.json</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Función <code>fetch_clinvar_data</code></strong>:</p>
+<ul>
+<li>Esta función consulta la API de ClinVar para obtener información sobre variantes genéticas relacionadas con una enfermedad específica. Se realiza una búsqueda para obtener los IDs de las variantes y luego se obtienen los detalles de esas variantes.</li>
+</ul>
+</li>
+</ol>
+<h3 id="objetivo-de-los-cambios">Objetivo de los Cambios:</h3>
+<p>Estos cambios están diseñados para mejorar la funcionalidad del bot al permitirle:</p>
+<ul>
+<li>Realizar web scraping en la Clínica Mayo para obtener información adicional sobre enfermedades genéticas.</li>
+<li>Guardar y cargar esta información en un archivo JSON para su posterior uso.</li>
+<li>Consultar la API de ClinVar para obtener datos precisos sobre variantes genéticas.</li>
+</ul>
+<p>Esto amplía la capacidad del bot para manejar consultas sobre cualquier enfermedad genética, utilizando múltiples fuentes de información para proporcionar respuestas más completas y precisas.</p>
+</div>
+</body>
+
+</html>
