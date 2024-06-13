@@ -74,18 +74,46 @@ def get_custom_tools():
     return [wikipedia_tool, arxiv_tool, clinica_mayo_tool]
 
 # Función para procesar la consulta del usuario y devolver la respuesta adecuada
-def process_query(model, query, prompt):
+def process_query(query, lang='en'):
     tools = get_custom_tools()
-    agent = create_custom_tools_agent(model, tools, prompt)
+    translator = Translator()
 
     # Traducir la pregunta al inglés si es necesario
-    translator = Translator()
-    query_en = translator.translate(query, dest='en').text
+    query_en = translator.translate(query, dest='en').text if lang == 'es' else query
+
+    model = HuggingFaceHub(repo_id="LLaMA-3", model_kwargs={"temperature": 0.7}, huggingfacehub_api_token=os.getenv('HUGGING_FACE_API_TOKEN'))
+    prompt_template = """
+    Utiliza la siguiente información para responder la pregunta del usuario.
+    Si no sabes la respuesta, simplemente di que no lo sabes, no inventes una respuesta.
+
+    Contexto: {context}
+    Pregunta: {input}
+
+    Devuelve solo la respuesta útil a continuación y nada más.
+    Respuesta útil:
+    """
+    prompt = ChatPromptTemplate.from_template(prompt_template)
+
+    agent = create_custom_tools_agent(model, tools, prompt)
 
     # Ejecutar la consulta utilizando el agente
     response = agent.invoke({'input': query_en})
 
     # Traducir la respuesta de vuelta al español si es necesario
-    response_es = translator.translate(response['output'], dest='es').text
+    response_es = translator.translate(response['output'], dest='es').text if lang == 'es' else response['output']
 
     return response_es
+
+# Función para buscar datos en Elasticsearch
+def search_data_in_es(index_name, query):
+    es_url = f"https://{os.getenv('ELASTICSEARCH_USERNAME')}:{os.getenv('ELASTICSEARCH_PASSWORD')}@{os.getenv('ELASTICSEARCH_ENDPOINT')}:443"
+    es = Elasticsearch(es_url)
+    search_query = {
+        "query": {
+            "match": {
+                "disease": query
+            }
+        }
+    }
+    response = es.search(index=index_name, body=search_query)
+    return response['hits']['hits']
