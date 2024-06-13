@@ -1,0 +1,202 @@
+[
+  {
+    "Gene":"HNF1A",
+    "Mutation":"NM_000545.8(HNF1A):c.1324C>T (p.Gln442Ter)",
+    "Protein Change":"Q442*",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Maturity-onset diabetes of the young type 3",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3237529\/"
+  },
+  {
+    "Gene":"HNF1B",
+    "Mutation":"NM_000458.4(HNF1B):c.827_837del (p.Arg276fs)",
+    "Protein Change":"R250fs, R276fs",
+    "Variant Type":"Deletion",
+    "Condition":"Renal cysts and diabetes syndrome",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3236049\/"
+  },
+  {
+    "Gene":"HNF1B",
+    "Mutation":"NM_000458.4(HNF1B):c.92_99dup (p.Leu34fs)",
+    "Protein Change":"L34fs",
+    "Variant Type":"Duplication",
+    "Condition":"Renal cysts and diabetes syndrome",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3235201\/"
+  },
+  {
+    "Gene":"HNF1B",
+    "Mutation":"NM_000458.4(HNF1B):c.1397_1404del (p.Leu466fs)",
+    "Protein Change":"L440fs, L466fs",
+    "Variant Type":"Deletion",
+    "Condition":"Renal cysts and diabetes syndrome",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3234111\/"
+  },
+  {
+    "Gene":"AVPR2",
+    "Mutation":"NM_000054.7(AVPR2):c.575G>C (p.Cys192Ser)",
+    "Protein Change":"C192S",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Diabetes insipidus, nephrogenic, X-linked",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3234058\/"
+  },
+  {
+    "Gene":"GCK",
+    "Mutation":"NM_000162.5(GCK):c.605T>G (p.Met202Arg)",
+    "Protein Change":"M201R, M202R, M203R",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Monogenic diabetes",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3234002\/"
+  },
+  {
+    "Gene":"GCK",
+    "Mutation":"NM_000162.5(GCK):c.1228G>T (p.Gly410Cys)",
+    "Protein Change":"G30C, G409C, G410C, G411C, G73C, G88C",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Monogenic diabetes",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3233996\/"
+  },
+  {
+    "Gene":"GCK",
+    "Mutation":"NM_000162.5(GCK):c.1234G>A (p.Val412Met)",
+    "Protein Change":"V32M, V411M, V412M, V413M, V75M, V90M",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Monogenic diabetes",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3233994\/"
+  },
+  {
+    "Gene":"GCK",
+    "Mutation":"NM_000162.5(GCK):c.454T>A (p.Phe152Ile)",
+    "Protein Change":"F151I, F152I, F153I",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Monogenic diabetes",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3233993\/"
+  },
+  {
+    "Gene":"GCK",
+    "Mutation":"NM_000162.5(GCK):c.1235T>A (p.Val412Glu)",
+    "Protein Change":"V32E, V411E, V412E, V413E, V75E, V90E",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Monogenic diabetes",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3233992\/"
+  },
+  {
+    "Gene":"GCK",
+    "Mutation":"NM_000162.5(GCK):c.1226del (p.Asp409fs)",
+    "Protein Change":"D29fs, D408fs, D409fs, D410fs, D72fs, D87fs",
+    "Variant Type":"Deletion",
+    "Condition":"Monogenic diabetes",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3233458\/"
+  },
+  {
+    "Gene":"GCK",
+    "Mutation":"NM_000162.5(GCK):c.905del (p.Val302fs)",
+    "Protein Change":"V301fs, V302fs, V303fs",
+    "Variant Type":"Deletion",
+    "Condition":"Maturity onset diabetes mellitus in young",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3230480\/"
+  },
+  {
+    "Gene":"GCK",
+    "Mutation":"NM_000162.5(GCK):c.814G>T (p.Glu272Ter)",
+    "Protein Change":"E271*, E272*, E273*",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Maturity onset diabetes mellitus in young",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3230478\/"
+  },
+  {
+    "Gene":"HNF4A",
+    "Mutation":"NM_175914.5(HNF4A):c.421del (p.Arg141fs)",
+    "Protein Change":"R138fs, R141fs, R156fs, R163fs",
+    "Variant Type":"Deletion",
+    "Condition":"Monogenic diabetes",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3068532\/"
+  },
+  {
+    "Gene":"HNF4A",
+    "Mutation":"NM_175914.5(HNF4A):c.331G>T (p.Glu111Ter)",
+    "Protein Change":"E108*, E111*, E126*, E133*",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Monogenic diabetes",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3068531\/"
+  },
+  {
+    "Gene":"HNF4A",
+    "Mutation":"NM_175914.5(HNF4A):c.320C>A (p.Ala107Asp)",
+    "Protein Change":"A104D, A107D, A122D, A129D",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Monogenic diabetes",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3068530\/"
+  },
+  {
+    "Gene":"HNF4A",
+    "Mutation":"NM_175914.5(HNF4A):c.278G>C (p.Cys93Ser)",
+    "Protein Change":"C108S, C115S, C90S, C93S",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Monogenic diabetes",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3068527\/"
+  },
+  {
+    "Gene":"GCK",
+    "Mutation":"NM_000162.5(GCK):c.363+1G>A",
+    "Protein Change":"",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Monogenic diabetes",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3068513\/"
+  },
+  {
+    "Gene":"AVPR2",
+    "Mutation":"NM_000054.7(AVPR2):c.342del (p.Ala114_Val115insTer)",
+    "Protein Change":"",
+    "Variant Type":"Deletion",
+    "Condition":"Diabetes insipidus, nephrogenic, X-linked",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3066243\/"
+  },
+  {
+    "Gene":"GCK",
+    "Mutation":"NM_000162.5(GCK):c.118G>T (p.Glu40Ter)",
+    "Protein Change":"E39*, E40*, E41*",
+    "Variant Type":"single nucleotide variant",
+    "Condition":"Maturity-onset diabetes of the young type 2",
+    "Germline Classification":"Pathogenic",
+    "Description":"No description available.",
+    "Link":"https:\/\/www.ncbi.nlm.nih.gov\/clinvar\/variation\/3066162\/"
+  }
+]
