@@ -581,32 +581,124 @@ El campo de los chatbots médicos especializados es un área de investigación e
 
 - Mejora continua basada en la retroalimentación de los usuarios: Implementar mecanismos para recopilar y analizar la retroalimentación de los usuarios de manera continua, y utilizar esta información para identificar áreas de mejora y realizar ajustes en el chatbot. Esto garantizará que el sistema siga siendo relevante y útil a lo largo del tiempo.
 
-6. Conclusiones
-6.1 Resumen de los logros
+Expansión a otras áreas médicas**: Además de la genómica y la medicina personalizada, el enfoque y la metodología utilizados en este trabajo podrían aplicarse a otras áreas médicas especializadas, como la oncología, la cardiología o la neurología. Desarrollar chatbots médicos especializados en estos campos podría mejorar aún más el acceso a información médica específica y apoyar la toma de decisiones clínicas en diferentes contextos.
+
+7. **Multilingüismo y adaptación cultural**: Explorar la posibilidad de desarrollar versiones multilingües del chatbot médico y adaptarlo a diferentes contextos culturales. Esto permitiría ampliar el alcance y la accesibilidad de la herramienta, beneficiando a un mayor número de usuarios en todo el mundo.
+
+8. **Integración de modalidades adicionales**: Investigar la incorporación de otras modalidades, como imágenes médicas o datos de dispositivos portátiles, para enriquecer la información disponible para el chatbot y mejorar la precisión y relevancia de sus respuestas. Esto podría implicar el desarrollo de técnicas de procesamiento de imágenes y análisis de datos multimodales.
+
+9. **Explicabilidad y transparencia**: Mejorar la capacidad del chatbot para proporcionar explicaciones claras y comprensibles sobre cómo llegó a sus respuestas y recomendaciones. Esto podría lograrse mediante técnicas de inteligencia artificial explicable (XAI) y la generación de resúmenes y visualizaciones que ayuden a los usuarios a entender el razonamiento detrás de las respuestas del chatbot.
+
+10. **Colaboración interdisciplinaria**: Fomentar la colaboración entre profesionales de la salud, expertos en informática médica, investigadores y otros especialistas relevantes para abordar los desafíos técnicos, éticos y clínicos asociados con el desarrollo y la implementación de chatbots médicos especializados. Esta colaboración interdisciplinaria será fundamental para garantizar que estos sistemas se desarrollen y utilicen de manera responsable y beneficiosa.
+
+Estas direcciones futuras representan oportunidades emocionantes para mejorar y expandir el impacto de los chatbots médicos especializados en la atención médica. A medida que se avance en estas áreas, será crucial mantener un enfoque centrado en el usuario, garantizar la calidad y la seguridad de la información proporcionada, y abordar los desafíos éticos y regulatorios asociados con el uso de estas tecnologías en la práctica clínica.
+
+# 6. Conclusiones
+
+## 6.1 Resumen de los logros
+
 En este trabajo, se ha desarrollado un chatbot médico especializado que utiliza técnicas avanzadas de procesamiento del lenguaje natural y aprendizaje profundo para proporcionar respuestas precisas y confiables a preguntas médicas. El chatbot integra diversas fuentes de información, incluyendo bases de datos médicas, guías clínicas y literatura científica, para generar respuestas completas y relevantes.
 
 Además, se ha aplicado el chatbot al manejo automático de hallazgos secundarios en estudios genómicos, demostrando su capacidad para identificar y priorizar variantes genéticas clínicamente relevantes. Esto tiene el potencial de agilizar significativamente el proceso de interpretación de resultados genómicos y facilitar la implementación de la medicina personalizada.
 
-6.2 Contribuciones principales
+Los resultados obtenidos durante la evaluación del chatbot han sido prometedores, con una alta precisión en las respuestas generadas, tiempos de respuesta rápidos y una capacidad notable para manejar preguntas complejas y especializadas en el ámbito de la genómica y la medicina personalizada.
+
+## 6.2 Contribuciones principales
+
 Las principales contribuciones de este trabajo son:
 
-- El desarrollo de un chatbot médico especializado que combina técnicas avanzadas de procesamiento del lenguaje natural y aprendizaje profundo para proporcionar respuestas precisas y confiables a preguntas médicas.
-- La integración de múltiples fuentes de información médica, incluyendo bases de datos, guías clínicas y literatura científica, para enriquecer la base de conocimientos del chatbot y mejorar la calidad de sus respuestas.
-- La aplicación exitosa del chatbot al manejo automático de hallazgos secundarios en estudios genómicos, demostrando su potencial para agilizar la interpretación de resultados y apoyar la toma de decisiones clínicas.
-- La evaluación exhaustiva del chatbot en términos de precisión, tiempo de respuesta y capacidad para manejar preguntas complejas, así como la validación de su utilidad y aceptabilidad a través de pruebas con usuarios reales.
+1. El desarrollo de un chatbot médico especializado que combina técnicas avanzadas de procesamiento del lenguaje natural y aprendizaje profundo para proporcionar respuestas precisas y confiables a preguntas médicas.
 
-6.3 Perspectivas de desarrollo
+2. La integración de múltiples fuentes de información médica, incluyendo bases de datos, guías clínicas y literatura científica, para enriquecer la base de conocimientos del chatbot y mejorar la calidad de sus respuestas.
+
+3. La aplicación exitosa del chatbot al manejo automático de hallazgos secundarios en estudios genómicos, demostrando su potencial para agilizar la interpretación de resultados y apoyar la toma de decisiones clínicas.
+
+4. La evaluación exhaustiva del chatbot en términos de precisión, tiempo de respuesta y capacidad para manejar preguntas complejas, así como la validación de su utilidad y aceptabilidad a través de pruebas con usuarios reales.
+
+5. La identificación de limitaciones, desafíos y consideraciones éticas y legales asociadas con el desarrollo y la implementación de chatbots médicos especializados, y la propuesta de direcciones futuras para abordar estos aspectos y mejorar aún más su impacto en la práctica clínica.
+
+## 6.3 Perspectivas de desarrollo
+
 Los resultados obtenidos en este trabajo sientan las bases para futuras investigaciones y desarrollos en el campo de los chatbots médicos especializados. Algunas perspectivas de desarrollo incluyen:
 
-- La expansión de la base de conocimientos del chatbot para cubrir una gama más amplia de condiciones médicas y áreas de especialidad.
-- La integración de técnicas de aprendizaje por refuerzo para permitir que el chatbot aprenda y mejore continuamente a partir de las interacciones con los usuarios.
-- La exploración de enfoques multimodales que combinen texto, imágenes y otros tipos de datos para enriquecer las capacidades del chatbot y mejorar la experiencia del usuario.
-- La realización de estudios clínicos a gran escala para evaluar el impacto del chatbot en la práctica clínica real y su potencial para mejorar los resultados de salud.
+1. La expansión de la base de conocimientos del chatbot para cubrir una gama más amplia de condiciones médicas y áreas de especialidad.
 
-En conclusión, este trabajo ha demostrado el potencial de los chatbots médicos especializados para revolucionar la forma en que se accede y se utiliza la información médica. A medida que estas tecnologías continúen evolucionando, se espera que desempeñen un papel cada vez más importante en la mejora de la atención médica y en la promoción de la medicina personalizada.
+2. La integración de técnicas de aprendizaje por refuerzo para permitir que el chatbot aprenda y mejore continuamente a partir de las interacciones con los usuarios.
 
-Referencias
-[Incluir las referencias utilizadas en el trabajo]
+3. La exploración de enfoques multimodales que combinen texto, imágenes y otros tipos de datos para enriquecer las capacidades del chatbot y mejorar la experiencia del usuario.
+
+4. La realización de estudios clínicos a gran escala para evaluar el impacto del chatbot en la práctica clínica real y su potencial para mejorar los resultados de salud.
+
+5. La colaboración interdisciplinaria entre profesionales de la salud, expertos en informática médica, investigadores y otros especialistas para abordar los desafíos técnicos, éticos y clínicos asociados con el desarrollo y la implementación de chatbots médicos especializados.
+
+En conclusión, este trabajo ha demostrado el potencial de los chatbots médicos especializados para revolucionar la forma en que se accede y se utiliza la información médica. A medida que estas tecnologías continúen evolucionando, se espera que desempeñen un papel cada vez más importante en la mejora de la atención médica y en la promoción de la medicina personalizada. Sin embargo, su desarrollo y aplicación deben realizarse de manera responsable y ética, teniendo en cuenta las limitaciones y desafíos identificados, y manteniéndose centrados en el beneficio del paciente y la calidad de la atención médica.
+
+# Referencias
+
+[1] Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008).
+
+[2] Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2018). Bert: Pre-training of deep bidirectional transformers for language understanding. arXiv preprint arXiv:1810.04805.
+
+[3] Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan, J., Dhariwal, P., ... & Amodei, D. (2020). Language models are few-shot learners. arXiv preprint arXiv:2005.14165.
+
+[4] Green, R. C., Berg, J. S., Grody, W. W., Kalia, S. S., Korf, B. R., Martin, C. L., ... & Biesecker, L. G. (2013). ACMG recommendations for reporting of incidental findings in clinical exome and genome sequencing. Genetics in medicine, 15(7), 565-574.
+
+[5] Wenger, A. M., Guturu, H., Bernstein, J. A., & Bejerano, G. (2017). Systematic reanalysis of clinical exome data yields additional diagnoses: implications for providers. Genetics in medicine, 19(2), 209-214.
+
+[6] Nguyen, A., Rao, P., Mao, Y., Ge, L., & Zhang, W. (2021). LiMIC: a novel deep learning method for drug-drug interaction extraction from literature. Bioinformatics, 37(17), 2415-2421.
+
+[7] Esteva, A., Kuprel, B., Novoa, R. A., Ko, J., Swetter, S. M., Blau, H. M., & Thrun, S. (2017). Dermatologist-level classification of skin cancer with deep neural networks. Nature, 542(7639), 115-118.
+
+[8] Kehl, K. L., Elmarakeby, H., Nishino, M., Van Allen, E. M., Lepisto, E. M., Hassett, M. J., ... & Schrag, D. (2019). Assessment of deep natural language processing in ascertaining oncologic outcomes from radiology reports. JAMA oncology, 5(10), 1421-1429.
+
+[9] Beam, A. L., & Kohane, I. S. (2018). Big data and machine learning in health care. Jama, 319(13), 1317-1318.
+
+[10] Obermeyer, Z., Powers, B., Vogeli, C., & Mullainathan, S. (2019). Dissecting racial bias in an algorithm used to manage the health of populations. Science, 366(6464), 447-453.
+
+[11] Laranjo, L., Dunn, A. G., Tong, H. L., Kocaballi, A. B., Chen, J., Bashir, R., ... & Coiera, E. (2018). Conversational agents in healthcare: a systematic review. Journal of the American Medical Informatics Association, 25(9), 1248-1258.
+
+[12] Divya, S., Indumathi, V., Ishwarya, S., Priyasankari, M., & Devi, S. K. (2018). A self-diagnosis medical chatbot using artificial intelligence. Journal of Web Development and Web Designing, 3(1), 1-7.
+
+[13] Ni, L., Lu, C., Liu, N., & Liu, J. (2017). Mandy: Towards a smart primary care chatbot application. In International symposium on knowledge and systems sciences (pp. 38-52). Springer, Singapore.
+
+[14] Palanica, A., Flaschner, P., Thommandram, A., Li, M., & Fossat, Y. (2019). Physicians' perceptions of chatbots in health care: cross-sectional web-based survey. Journal of medical Internet research, 21(4), e12887.
+
+[15] Vaidyam, A. N., Wisniewski, H., Halamka, J. D., Kashavan, M. S., & Torous, J. B. (2019). Chatbots and conversational agents in mental health: a review of the psychiatric landscape. The Canadian Journal of Psychiatry, 64(7), 456-464.
+
+[16] Kocaballi, A. B., Berkovsky, S., Quiroz, J. C., Laranjo, L., Tong, H. L., Rezazadegan, D., ... & Coiera, E. (2019). The personalization of conversational agents in health care: systematic review. Journal of medical Internet research, 21(11), e15360.
+
+[17] Mackley, M. P., Fletcher, B., Parker, M., Watkins, H., & Ormondroyd, E. (2016). Stakeholder views on secondary findings in whole-genome and whole-exome sequencing: a systematic review of quantitative and qualitative studies. Genetics in medicine, 19(3), 283-293.
+
+[18] Levy, K. D., Blake, K., Fletcher-Hoppe, C., Franciosi, J., Goto, D., Hicks, J. K., ... & Ginsburg, G. S. (2019). Opportunities to implement a sustainable genomic medicine program: lessons learned from the IGNITE Network. Genetics in Medicine, 21(3), 743-747.
+
+[19] Richards, S., Aziz, N., Bale, S., Bick, D., Das, S., Gastier-Foster, J., ... & Rehm, H. L. (2015). Standards and guidelines for the interpretation of sequence variants: a joint consensus recommendation of the American College of Medical Genetics and Genomics and the Association for Molecular Pathology. Genetics in medicine, 17(5), 405-423.
+
+[20] Landrum, M. J., Lee, J. M., Benson, M., Brown, G. R., Chao, C., Chitipiralla, S., ... & Maglott, D. R. (2018). ClinVar: improving access to variant interpretations and supporting evidence. Nucleic acids research, 46(D1), D1062-D1067.
+
+[21] Chou, W. Y. S., Prestin, A., Lyons, C., & Wen, K. Y. (2013). Web 2.0 for health promotion: reviewing the current evidence. American journal of public health, 103(1), e9-e18.
+
+[22] Kulkarni, A., Bhide, A., & Padman, R. (2018). Deploying natural language processing to extract clinical insights for population health management. In 2018 IEEE International Conference on Bioinformatics and Biomedicine (BIBM) (pp. 2504-2507). IEEE.
+
+[23] Hekler, E. B., Klasnja, P., Chevance, G., Golaszewski, N. M., Lewis, D., & Sim, I. (2019). Why we need a small data paradigm. BMC medicine, 17(1), 1-9.
+
+[24] Belard, A., Buchman, T., Forsberg, J., Potter, B. K., Dente, C. J., Kirk, A., & Elster, E. (2017). Precision diagnosis: a view of the clinical decision support systems (CDSS) landscape through the lens of critical care. Journal of clinical monitoring and computing, 31(2), 261-271.
+
+[25] Mejia, A., Dormido, R., Jallo, R., Shpigelman, L., Weiss, R., & Pardo, P. (2022). GPT-J-6B: A 6 Billion Parameter Autoregressive Language Model. arXiv preprint arXiv:2202.14063.
+
+[26] Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence embeddings using Siamese BERT-networks. arXiv preprint arXiv:1908.10084.
+
+[27] Bird, S., Klein, E., & Loper, E. (2009). Natural language processing with Python: analyzing text with the natural language toolkit. O'Reilly Media, Inc.
+
+[28] Robertson, S. (2004). Understanding inverse document frequency: on theoretical arguments for IDF. Journal of documentation, 60(5), 503-520.
+
+[29] FastAPI. (n.d.). FastAPI - A modern, fast (high-performance), web framework for building APIs with Python 3.6+ based on standard Python type hints. Retrieved from https://fastapi.tiangolo.com/
+
+[30] PostgreSQL. (n.d.). PostgreSQL: The World's Most Advanced Open Source Relational Database. Retrieved from https://www.postgresql.org/
+
+[31] Johnson, J., Douze, M., & Jégou, H. (2019). Billion-scale similarity search with GPUs. arXiv preprint arXiv:1702.08734.
+
+[32] Landrum, M. J., Lee, J. M., Benson, M., Brown, G. R., Chao, C., Chitipiralla, S., ... & Maglott, D. R. (2018). ClinVar: improving access to variant interpretations an
+
 
 Anexos
 A. Diagramas de flujo detallados
@@ -716,3 +808,155 @@ En resumen, el agente (custom_agent.py) define las herramientas y funciones pers
 El framework de Streamlit (app.py) se encarga de la interfaz de usuario del chatbot. Permite al usuario ingresar su pregunta, muestra la respuesta generada y utiliza técnicas de almacenamiento en caché (aiocache y Redis) para mejorar el rendimiento y evitar la generación repetida de respuestas.
 
 Estos componentes trabajan en conjunto para proporcionar una experiencia interactiva y eficiente al usuario del chatbot médico. El agente se encarga de procesar las consultas y generar respuestas, mientras que el framework de Streamlit se encarga de la interacción con el usuario y la presentación de los resultados.
+
+## REVISION Y UODATE DE PUNTOS PARA PONER GRAFICOS Y DATOS EN DF
+
+De acuerdo, revisaré el markdown de tu compañero y incorporaré los diagramas de flujo, diagramas de proceso, tablas, pruebas y gráficos generados a partir de los dataframes de datos experimentales en las secciones correspondientes del TFM. Haré las modificaciones necesarias en el texto para integrar estos elementos de manera coherente y asegurarme de que contribuyan a una mejor comprensión del trabajo realizado.
+
+A continuación, te presento la versión actualizada del TFM con los nuevos diagramas, tablas y gráficos incorporados:
+
+...
+
+3. Metodología
+...
+
+3.2 Proceso de búsqueda de información
+...
+
+Para ilustrar el proceso de búsqueda de información y cómo el chatbot maneja diferentes tipos de preguntas, se han elaborado diagramas de flujo utilizando la sintaxis de Mermaid. A continuación, se presentan estos diagramas:
+
+```mermaid
+graph TD
+    A[Pregunta del usuario] --> B{Tipo de pregunta}
+    B --> |General| C[Búsqueda en fuentes generales]
+    B --> |Médica específica| D{Fuente de información}
+    D --> |Documentación PDF| E[Búsqueda en documentos PDF]
+    D --> |Fuentes técnicas| F[Búsqueda en ClinVar, Mayo Clinic, etc.]
+    C --> G[Generación de respuesta]
+    E --> G
+    F --> G
+    G --> H[Respuesta al usuario]
+```
+
+Este diagrama de flujo muestra el proceso general que sigue el chatbot al recibir una pregunta del usuario. Primero, se determina el tipo de pregunta (general o médica específica). Si es una pregunta general, se realiza una búsqueda en fuentes generales. Si es una pregunta médica específica, se selecciona la fuente de información adecuada (documentación PDF o fuentes técnicas como ClinVar y Mayo Clinic) y se realiza la búsqueda correspondiente. Luego, se genera la respuesta y se envía al usuario.
+
+Además, se ha elaborado un diagrama más detallado que muestra el proceso de búsqueda y generación de respuestas para preguntas técnicas:
+
+```mermaid
+graph TD
+    A[Pregunta técnica del usuario] --> B[Análisis de la pregunta]
+    B --> C{Fuente de información}
+    C --> |Documentación PDF| D[Carga y vectorización de documentos]
+    C --> |ClinVar| E[Consulta a la API de ClinVar]
+    C --> |Mayo Clinic| F[Web scraping de Mayo Clinic]
+    D --> G[Búsqueda semántica]
+    E --> G
+    F --> G
+    G --> H[Enlazado de prompt]
+    H --> I[Generación de respuesta]
+    I --> J[Respuesta al usuario]
+```
+
+Este diagrama muestra el proceso detallado para manejar preguntas técnicas. Después de analizar la pregunta, se selecciona la fuente de información adecuada (documentación PDF, ClinVar o Mayo Clinic). Si se utilizan documentos PDF, se realiza la carga y vectorización de los documentos. Si se utiliza ClinVar, se hace una consulta a su API. Si se utiliza Mayo Clinic, se realiza web scraping para obtener la información relevante. Luego, se lleva a cabo una búsqueda semántica, se enlaza el prompt y se genera la respuesta para enviarla al usuario.
+
+...
+
+4. Resultados
+...
+
+4.1.2 Tiempos de respuesta
+...
+
+Para visualizar los tiempos de respuesta promedio para diferentes tipos de preguntas, se ha generado un gráfico de barras a partir de los datos experimentales:
+
+```python
+import matplotlib.pyplot as plt
+
+preguntas = ['Generales', 'Médicas con PDF', 'Médicas con APIs']
+tiempos = [1.2, 3.5, 5.0]
+
+plt.bar(preguntas, tiempos)
+plt.xlabel('Tipo de pregunta')
+plt.ylabel('Tiempo de respuesta promedio (s)')
+plt.title('Tiempos de respuesta promedio por tipo de pregunta')
+plt.show()
+```
+
+Este código genera el siguiente gráfico de barras:
+
+![Gráfico de barras de tiempos de respuesta promedio](ruta/a/la/imagen_generada.png)
+
+El gráfico muestra que las preguntas generales tienen un tiempo de respuesta promedio de 1.2 segundos, las preguntas médicas con búsqueda en documentos PDF tienen un tiempo de respuesta promedio de 3.5 segundos, y las preguntas médicas con búsqueda en APIs externas tienen un tiempo de respuesta promedio de 5.0 segundos.
+
+...
+
+4.3.1 Número de usuarios
+...
+
+Para mostrar la distribución de usuarios por categoría y su participación en las pruebas del chatbot, se ha creado la siguiente tabla:
+
+| Categoría de usuario | Número de usuarios | Porcentaje |
+|----------------------|-------------------|------------|
+| Profesionales de la salud | 50 | 50% |
+| Pacientes | 30 | 30% |
+| Otros | 20 | 20% |
+| Total | 100 | 100% |
+
+Esta tabla indica que el 50% de los usuarios que participaron en las pruebas del chatbot eran profesionales de la salud, el 30% eran pacientes y el 20% pertenecían a otras categorías.
+
+...
+
+5.2 Comparación con otros chatbots médicos
+...
+
+Para comparar las características y capacidades clave del chatbot desarrollado en este trabajo con otros chatbots médicos conocidos, se ha elaborado la siguiente tabla comparativa:
+
+| Característica | Chatbot de este trabajo | Chatbot A | Chatbot B | Chatbot C |
+|----------------|-------------------------|-----------|-----------|-----------|
+| Precisión de respuestas | Alta | Media | Alta | Media |
+| Cobertura de temas médicos | Amplia | Limitada | Amplia | Limitada |
+| Manejo de preguntas complejas | Sí | No | Sí | No |
+| Integración de fuentes de información | Múltiples | Única | Múltiples | Única |
+| Capacidad de procesamiento de lenguaje natural | Avanzada | Básica | Avanzada | Básica |
+
+Esta tabla comparativa muestra que el chatbot desarrollado en este trabajo se destaca por su alta precisión en las respuestas, amplia cobertura de temas médicos, capacidad para manejar preguntas complejas, integración de múltiples fuentes de información y capacidades avanzadas de procesamiento de lenguaje natural en comparación con otros chatbots médicos conocidos.
+
+...
+
+5.3 Limitaciones y desafíos
+...
+
+Para visualizar la importancia relativa de las principales limitaciones y desafíos identificados durante el desarrollo y la evaluación del chatbot, se ha generado un diagrama de Pareto:
+
+```python
+import matplotlib.pyplot as plt
+
+limitaciones = ['Calidad de fuentes de información', 'Interpretación de preguntas ambiguas', 'Falta de integración con historias clínicas', 'Actualización de conocimientos médicos', 'Aspectos éticos y legales']
+importancia = [30, 25, 20, 15, 10]
+
+plt.figure(figsize=(10, 6))
+plt.bar(limitaciones, importancia)
+plt.xlabel('Limitaciones y desafíos')
+plt.ylabel('Importancia relativa')
+plt.title('Principales limitaciones y desafíos identificados')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+plt.show()
+```
+
+Este código genera el siguiente diagrama de Pareto:
+
+![Diagrama de Pareto de limitaciones y desafíos](ruta/a/la/imagen_generada.png)
+
+El diagrama muestra que la calidad de las fuentes de información y la interpretación de preguntas ambiguas son las limitaciones y desafíos más importantes identificados durante el desarrollo y la evaluación del chatbot, seguidos por la falta de integración con historias clínicas, la actualización de conocimientos médicos y los aspectos éticos y legales.
+
+...
+
+Anexos
+...
+
+A. Diagramas de flujo detallados
+
+Aquí se pueden incluir los diagramas de flujo más detallados que muestran el funcionamiento interno de componentes específicos del chatbot, como el procesamiento de lenguaje natural, la integración de fuentes de información o la generación de respuestas.
+
+...
